@@ -1,8 +1,17 @@
-export default function Header() {
-  const logoStyle = {
-    width: '100%',
-    maxWidth: '300px',
-  };
+import { format } from "date-fns";
+import parseISO from 'date-fns/fp/parseISO';
+import { invoiceJSON } from '../../@types/index';
+
+export default function Header(props: invoiceJSON) {
+  function getInvoiceNumber(invoiceId: string): string {
+    const invoiceIdRegExp = new RegExp(/^(?:\w+-){4}(\w+)+$/gm);
+    return invoiceIdRegExp.exec(invoiceId)![1];
+  }
+
+  function formatDate(inputDate: string): string {
+    const date = parseISO(inputDate);
+    return format(date, "dd/MM/yyyy");
+  }
 
   return (
     <>
@@ -14,15 +23,15 @@ export default function Header() {
               <td className="title">
                 <img
                   src="cai_logo.svg"
-                  style={logoStyle}
+                  className="logo"
                   alt="logo"
                 />
               </td>
 
-              <td>
-                Invoice #: 39291 <br />
-                Created: 17/07/2021 <br />
-                Due: 17/08/2021
+              <td data-testid="invoice-id-dates">
+                Invoice #: {getInvoiceNumber(props.id)} <br />
+                Created: {formatDate(props.createdAt)} <br />
+                Due: {formatDate(props.dueAt)}
               </td>
             </tr>
           </tbody>
@@ -36,18 +45,18 @@ export default function Header() {
           <tbody>
             <tr>
               <td>
-                collectAI GmbH.
+                collectAI GmbH
                 <br />
                 20457 Hamburg
                 <br />
                 Hamburg, Germany
               </td>
 
-              <td>
-                Acme, GmbH.
+              <td data-testid="company">
+                {props.company}
                 <br />
-                Bob Hans Jens, The Great <br />
-                youknowit@star-wars-is-real.pew
+                {props.fullName}<br />
+                {props.email}
               </td>
             </tr>
           </tbody>
