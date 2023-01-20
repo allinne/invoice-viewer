@@ -1,90 +1,168 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import { LineItem } from '../@types/index';
 import Body, { formatPrice } from "./body";
 
-afterEach(cleanup);
+describe('Body: readonly mode', () => {
+  const noop = jest.fn();
+  const isEditable = false;
 
-it('renders a component with an empty list', () => {
-  const data = {
-    id: '',
-    email: '',
-    fullName: '',
-    company: '',
-    createdAt: '',
-    dueAt: '',
+  afterEach(cleanup);
 
-    lineItems: [],
-  };
+  it('renders a component with an empty list', async () => {
+    const data: LineItem | [] = [];
 
-  render(
-    <table>
-      <tbody>
-        <Body { ...data }/>
-      </tbody>
-    </table>
-  );
+    render(
+      <table>
+        <tbody>
+          <Body
+            lineItems={data}
+            isEditable={isEditable}
+            changeDescription={noop}
+            changePrice={noop}
+          />
+        </tbody>
+      </table>
+    );
 
-  expect(screen.queryAllByTestId('list-item').length).toStrictEqual(0);
-});
+    expect(screen.queryAllByTestId('list-item').length).toStrictEqual(0);
 
-it('renders a component with a list of 2 items', async () => {
-  const firstItem = { description: 'Test data 1', price: 55.0 };
-  const data = {
-    id: '',
-    email: '',
-    fullName: '',
-    company: '',
-    createdAt: '',
-    dueAt: '',
+    const total = await screen.findByTestId('total');
+    const vat = await screen.findByTestId('vat');
+    
+    expect(total.innerHTML).toStrictEqual('Total: 0 EUR');
+    expect(vat.innerHTML).toStrictEqual('VAT (19%): 0 EUR');
+  });
 
-    lineItems: [
+  it('renders a component with a list of 2 items', async () => {
+    const firstItem: LineItem = { id: 0, description: 'Test data 1', price: 55.0 };
+    const data: LineItem[] = [
       firstItem,
-      { description: 'Test data 2', price: 45.0 },
-    ],
-  };
+      { id: 1, description: 'Test data 2', price: 45.0 },
+    ];
 
-  render(
-    <table>
-      <tbody>
-        <Body {...data}/>
-      </tbody>
-    </table>
-  );
+    render(
+      <table>
+        <tbody>
+          <Body
+            lineItems={data}
+            isEditable={isEditable}
+            changeDescription={noop}
+            changePrice={noop}
+          />
+        </tbody>
+      </table>
+    );
 
-  const listItems = await screen.findAllByTestId('list-item');
-  
-  expect(screen.queryAllByTestId('list-item').length).toStrictEqual(2);
+    const listItems = await screen.findAllByTestId('list-item');
 
-  const firstItemElement = listItems[0].getElementsByTagName('td');
-  expect(firstItemElement[0].innerHTML).toStrictEqual(firstItem.description);
-  expect(firstItemElement[1].innerHTML).toStrictEqual(`${formatPrice(firstItem.price)} EUR`);
+    expect(screen.queryAllByTestId('list-item').length).toStrictEqual(2);
+    expect(screen.queryAllByTestId('list-item-editable').length).toStrictEqual(0);
+
+    const firstItemElement = listItems[0].getElementsByTagName('td');
+    expect(firstItemElement[0].innerHTML).toStrictEqual(firstItem.description);
+    expect(firstItemElement[1].innerHTML).toStrictEqual(`${formatPrice(firstItem.price)} EUR`);
+  });
+
+  it('renders a component with calculated total and VAT', async () => {
+    const data: LineItem[] = [
+      { id: 0, description: 'Test data 1', price: 55.0 },
+      { id: 1, description: 'Test data 2', price: 45.0 },
+    ];
+
+    render(
+      <table>
+        <tbody>
+          <Body
+            lineItems={data}
+            isEditable={isEditable}
+            changeDescription={noop}
+            changePrice={noop}
+          />
+        </tbody>
+      </table>
+    );
+
+    const total = await screen.findByTestId('total');
+    const vat = await screen.findByTestId('vat');
+    
+    expect(total.innerHTML).toStrictEqual('Total: 100 EUR');
+    expect(vat.innerHTML).toStrictEqual('VAT (19%): 19 EUR');
+  });
+
+  it('should show 2 digits after decimal point in total and VAT', async () => {
+    const data: LineItem[] = [
+      { id: 0, description: 'Test data 1', price: 55.133 },
+      { id: 1, description: 'Test data 2', price: 45.244 },
+    ];
+
+    render(
+      <table>
+        <tbody>
+          <Body
+            lineItems={data}
+            isEditable={isEditable}
+            changeDescription={noop}
+            changePrice={noop}
+          />
+        </tbody>
+      </table>
+    );
+
+    const total = await screen.findByTestId('total');
+    const vat = await screen.findByTestId('vat');
+
+    expect(total.innerHTML).toStrictEqual('Total: 100,38 EUR');
+    expect(vat.innerHTML).toStrictEqual('VAT (19%): 19,07 EUR');
+  });
 });
 
-it('renders a component with calculated total and VAT', async () => {
-  const data = {
-    id: '',
-    email: '',
-    fullName: '',
-    company: '',
-    createdAt: '',
-    dueAt: '',
+describe('Body: editable mode', () => {
+  const changeDescriptionMock = jest.fn();
+  const changePriceMock = jest.fn();
+  const isEditable = true;
+  const data: LineItem[] = [
+    { id: 0, description: 'Test data 1', price: 55.0 },
+    { id: 1, description: 'Test data 2', price: 45.0 },
+  ];
 
-    lineItems: [
-      { description: 'Test data 1', price: 55.0 },
-      { description: 'Test data 2', price: 45.0 },
-    ],
-  };
+  beforeEach(() => {
+    render(
+      <table>
+        <tbody>
+          <Body
+            lineItems={data}
+            isEditable={isEditable}
+            changeDescription={changeDescriptionMock}
+            changePrice={changePriceMock}
+          />
+        </tbody>
+      </table>
+    );
+  });
 
-  render(
-    <table>
-      <tbody>
-        <Body {...data}/>
-      </tbody>
-    </table>
-  );
+  afterEach(cleanup);
 
-  const total = await screen.findByTestId('total');
-  const vat = await screen.findByTestId('vat');
+  it('renders a component with editable description and price', () => {  
+    expect(screen.queryAllByTestId('list-item-editable').length).toStrictEqual(2);
+  });
+
+  it('should call changeDescription', async () => {  
+    expect(changeDescriptionMock.mock.calls.length).toStrictEqual(0);
+
+    const items = await screen.findAllByTestId('list-item-description-editable');
+
+    fireEvent.input(items[0], { target: { value: '23' } });
   
-  expect(total.innerHTML).toStrictEqual('Total: 100 EUR');
-  expect(vat.innerHTML).toStrictEqual('VAT (19%): 19 EUR');
+    expect(changeDescriptionMock.mock.calls.length).toStrictEqual(1);
+  });
+
+  it('should call changeDescription', async () => {  
+    expect(changePriceMock.mock.calls.length).toStrictEqual(0);
+
+    const items = await screen.findAllByTestId('list-item-price-editable');
+
+    fireEvent.input(items[0], { target: { value: '23' } });
+  
+    expect(changePriceMock.mock.calls.length).toStrictEqual(1);
+  });
 });

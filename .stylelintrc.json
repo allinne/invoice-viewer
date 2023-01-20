@@ -1,0 +1,31 @@
+{
+  "extends": [
+    "stylelint-config-sass-guidelines",
+    "stylelint-config-standard-scss",
+    "stylelint-config-property-sort-order-smacss"
+  ],
+  "defaultSeverity": "error",
+  "plugins": [
+    "stylelint-scss",
+    "stylelint-order",
+    "stylelint-declaration-strict-value",
+    "stylelint-declaration-block-no-ignored-properties",
+    "stylelint-selector-bem-pattern"
+  ],
+  "rules": {
+    "declaration-no-important": [true, { "severity": "warning" }],
+    "function-parentheses-space-inside": null,
+    "max-nesting-depth": [
+      5,
+      {
+        "ignoreAtRules": ["each", "media", "supports", "include"]
+      }
+    ],
+    "no-descending-specificity": null,
+    "selector-class-pattern": null,
+    "declaration-block-no-duplicate-properties": true,
+    "declaration-block-no-shorthand-property-overrides": true,
+    "order/properties-alphabetical-order": null,
+    "order/order": null
+  }
+}

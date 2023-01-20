@@ -1,11 +1,12 @@
 import { format } from "date-fns";
 import parseISO from 'date-fns/fp/parseISO';
-import { invoiceJSON } from '../../@types/index';
+import { InvoiceJSON } from '../@types/index';
 
-export default function Header(props: invoiceJSON) {
+export default function Header(props: InvoiceJSON) {
   function getInvoiceNumber(invoiceId: string): string {
     const invoiceIdRegExp = new RegExp(/^(?:\w+-){4}(\w+)+$/gm);
-    return invoiceIdRegExp.exec(invoiceId)![1];
+    const match = invoiceIdRegExp.exec(invoiceId);
+    return match ? match[1] : '';
   }
 
   function formatDate(inputDate: string): string {
