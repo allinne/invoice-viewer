@@ -1,5 +1,5 @@
 import { cleanup, render, screen } from '@testing-library/react';
-import Header from "./Header";
+import Header from "./header";
 
 afterEach(cleanup);
 
@@ -16,16 +16,22 @@ it('renders a component with invoice data', async () => {
   };
 
   render(
-    <table>
-      <tbody>
-        <Header {...data}/>
-      </tbody>
-    </table>
+    <Header {...data}/>
   );
 
-  const invoiceData = await screen.findByTestId('invoice-id-dates');
-  const company = await screen.findByTestId('company');
+  const invoiceId = await screen.findByTestId('invoice-id');
+  const invoiceCreatedAt = await screen.findByTestId('invoice-created-at');
+  const invoiceDue = await screen.findByTestId('invoice-due');
   
-  expect(invoiceData.innerHTML).toStrictEqual('Invoice #: e5e5e5 <br>Created: 19/01/2023 <br>Due: 30/01/2023');
-  expect(company.innerHTML).toStrictEqual(`${data.company}<br>${data.fullName}<br>${data.email}`);
+  expect(invoiceId.innerHTML).toStrictEqual('Invoice #: e5e5e5');
+  expect(invoiceCreatedAt.innerHTML).toStrictEqual('Created: 19/01/2023');
+  expect(invoiceDue.innerHTML).toStrictEqual('Due: 30/01/2023');
+
+  const company = await screen.findByTestId('company');
+  const fullName = await screen.findByTestId('fullName');
+  const email = await screen.findByTestId('email');
+
+  expect(company.innerHTML).toStrictEqual(data.company);
+  expect(fullName.innerHTML).toStrictEqual(data.fullName);
+  expect(email.innerHTML).toStrictEqual(data.email);
 });

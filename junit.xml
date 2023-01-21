@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="8" failures="0" errors="0" time="1.637">
+  <testsuite name="Body: readonly mode" errors="0" failures="0" skipped="0" timestamp="2023-01-21T23:28:33" time="0.537" tests="7">
+    <testcase classname="Body: readonly mode renders a component with an empty list" name="Body: readonly mode renders a component with an empty list" time="0.015">
+    </testcase>
+    <testcase classname="Body: readonly mode renders a component with a list of 2 items" name="Body: readonly mode renders a component with a list of 2 items" time="0.004">
+    </testcase>
+    <testcase classname="Body: readonly mode renders a component with calculated total and VAT" name="Body: readonly mode renders a component with calculated total and VAT" time="0.003">
+    </testcase>
+    <testcase classname="Body: readonly mode should show 2 digits after decimal point in total and VAT" name="Body: readonly mode should show 2 digits after decimal point in total and VAT" time="0.002">
+    </testcase>
+    <testcase classname="Body: editable mode renders a component with editable description and price" name="Body: editable mode renders a component with editable description and price" time="0.004">
+    </testcase>
+    <testcase classname="Body: editable mode should call changeDescription" name="Body: editable mode should call changeDescription" time="0.006">
+    </testcase>
+    <testcase classname="Body: editable mode should call changeDescription" name="Body: editable mode should call changeDescription" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2023-01-21T23:28:34" time="0.242" tests="1">
+    <testcase classname=" renders a component with invoice data" name=" renders a component with invoice data" time="0.011">
+    </testcase>
+  </testsuite>
+</testsuites>

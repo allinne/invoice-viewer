@@ -1,6 +1,6 @@
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import { LineItem } from '../@types/index';
-import Body, { formatPrice } from "./Body";
+import Body, { formatPrice } from "./body";
 
 describe('Body: readonly mode', () => {
   const noop = jest.fn();
@@ -12,16 +12,12 @@ describe('Body: readonly mode', () => {
     const data: LineItem | [] = [];
 
     render(
-      <table>
-        <tbody>
-          <Body
-            lineItems={data}
-            isEditable={isEditable}
-            changeDescription={noop}
-            changePrice={noop}
-          />
-        </tbody>
-      </table>
+      <Body
+        lineItems={data}
+        isEditable={isEditable}
+        changeDescription={noop}
+        changePrice={noop}
+      />
     );
 
     expect(screen.queryAllByTestId('list-item').length).toStrictEqual(0);
@@ -41,16 +37,12 @@ describe('Body: readonly mode', () => {
     ];
 
     render(
-      <table>
-        <tbody>
-          <Body
-            lineItems={data}
-            isEditable={isEditable}
-            changeDescription={noop}
-            changePrice={noop}
-          />
-        </tbody>
-      </table>
+      <Body
+        lineItems={data}
+        isEditable={isEditable}
+        changeDescription={noop}
+        changePrice={noop}
+      />
     );
 
     const listItems = await screen.findAllByTestId('list-item');
@@ -70,16 +62,12 @@ describe('Body: readonly mode', () => {
     ];
 
     render(
-      <table>
-        <tbody>
-          <Body
-            lineItems={data}
-            isEditable={isEditable}
-            changeDescription={noop}
-            changePrice={noop}
-          />
-        </tbody>
-      </table>
+      <Body
+        lineItems={data}
+        isEditable={isEditable}
+        changeDescription={noop}
+        changePrice={noop}
+      />
     );
 
     const total = await screen.findByTestId('total');
@@ -96,16 +84,12 @@ describe('Body: readonly mode', () => {
     ];
 
     render(
-      <table>
-        <tbody>
-          <Body
-            lineItems={data}
-            isEditable={isEditable}
-            changeDescription={noop}
-            changePrice={noop}
-          />
-        </tbody>
-      </table>
+      <Body
+        lineItems={data}
+        isEditable={isEditable}
+        changeDescription={noop}
+        changePrice={noop}
+      />
     );
 
     const total = await screen.findByTestId('total');
@@ -127,16 +111,12 @@ describe('Body: editable mode', () => {
 
   beforeEach(() => {
     render(
-      <table>
-        <tbody>
-          <Body
-            lineItems={data}
-            isEditable={isEditable}
-            changeDescription={changeDescriptionMock}
-            changePrice={changePriceMock}
-          />
-        </tbody>
-      </table>
+      <Body
+        lineItems={data}
+        isEditable={isEditable}
+        changeDescription={changeDescriptionMock}
+        changePrice={changePriceMock}
+      />
     );
   });
 
