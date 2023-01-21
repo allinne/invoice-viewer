@@ -5,7 +5,7 @@ export function formatPrice(price: number) {
   return String(price).replaceAll('.', ',');
 }
 
-export default function Body(props: bodyData) {
+function Body(props: bodyData) {
   const currencyName = 'EUR';
   const vatValue = 19;
 
@@ -27,14 +27,17 @@ export default function Body(props: bodyData) {
     }
   }
 
-  function handleChangePrice(ev: FormEvent<HTMLInputElement>, item: LineItem) {
+  function handleChangePrice(ev: FormEvent<HTMLInputElement>, item: LineItem, index: number) {
     const inputNumber = ev.currentTarget.value;
     const formatted = Number(inputNumber.replaceAll(',', '.'));
 
-    props.changePrice({
-      ...item,
-      price: Number.isNaN(formatted) ? 0 : formatted,
-    });
+    props.changePrice(
+      {
+        ...item,
+        price: Number.isNaN(formatted) ? 0 : formatted,
+      },
+      index
+    );
   }
 
   const listItems = (props.lineItems || []).map((item: LineItem, index: number) =>
@@ -53,10 +56,13 @@ export default function Body(props: bodyData) {
           type="text"
           value={item.description}
           onChange={(ev: FormEvent<HTMLInputElement>) => {
-            props.changeDescription({
-              ...item,
-              description: ev.currentTarget.value,
-            });
+            props.changeDescription(
+              {
+                ...item,
+                description: ev.currentTarget.value,
+              },
+              index
+            );
           }}
         />
       </td>
@@ -67,7 +73,7 @@ export default function Body(props: bodyData) {
           value={formatPrice(item.price)}
           onBeforeInput={(ev: FormEvent<HTMLInputElement>) => { handleInputPrice(ev) }}
           onChange={(ev: FormEvent<HTMLInputElement>) => {
-            handleChangePrice(ev, item);
+            handleChangePrice(ev, item, index);
           }}
         />
         {currencyName}
@@ -96,3 +102,5 @@ export default function Body(props: bodyData) {
     </>
   );
 }
+
+export default Body;

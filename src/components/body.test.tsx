@@ -1,6 +1,6 @@
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import { LineItem } from '../@types/index';
-import Body, { formatPrice } from "./body";
+import Body, { formatPrice } from "./Body";
 
 describe('Body: readonly mode', () => {
   const noop = jest.fn();

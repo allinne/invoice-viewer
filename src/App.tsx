@@ -1,29 +1,10 @@
-import { useReducer, useState, useEffect, Reducer, Suspense } from 'react'
-import Header from './components/header';
-import Body from './components/body';
-import { InvoiceJSON, LineItem, ReducerAction, ReducerActionType } from './@types/index';
+import { useReducer, useState, useEffect, useCallback, Reducer, Suspense } from 'react'
+import { InvoiceJSON, LineItem, ReducerAction, ReducerActionType, onDropEvent } from './@types/index';
+import itemsReducer from './itemsReducer';
+import Header from './components/Header';
+import Body from './components/Body';
+import Dropzone from './components/Dropzone';
 import './styles/App.scss';
-
-function itemsReducer(items: LineItem[], action: ReducerAction): LineItem[] {
-  switch (action.type) {
-    case ReducerActionType.DESCRIPTION_CHANGED: 
-    case ReducerActionType.PRICE_CHANGED: {
-      return items.map((t) => {
-        if (t.id === action.item.id) {
-          return action.item;
-        } else {
-          return t;
-        }
-      });
-    }
-    case ReducerActionType.INITIALIZE_CARD: {
-      return action.payload || [];
-    }
-    default: {
-      throw Error('Unknown action: ' + action.type);
-    }
-  }
-}
 
 function App() {
   const [initialData, setInitialData] = useState<InvoiceJSON>();
@@ -32,29 +13,36 @@ function App() {
     fetch('/invoice.json')
       .then((res) => res.json())
       .then((data) => {
-        setInitialData(data);
-        dispatch({
-          type: ReducerActionType.INITIALIZE_CARD,
-          item: data.lineItems[0],
-          payload: data.lineItems,
-        })
+        updateData(data);
       })
   }, []);
+
+  function updateData(data: InvoiceJSON) {
+    setInitialData(data);
+    dispatch({
+      type: ReducerActionType.INITIALIZE_CARD,
+      item: data.lineItems[0],
+      index: 0,
+      payload: data.lineItems,
+    });
+  }
 
   const initialLineItems: LineItem[] = initialData ? initialData.lineItems : [];
   const [data, dispatch] = useReducer<Reducer<LineItem[], ReducerAction>>(itemsReducer, initialLineItems);
 
-  function handleChangeDescription(item: LineItem) {
+  function handleChangeDescription(item: LineItem, index: number) {
     dispatch({
       type: ReducerActionType.DESCRIPTION_CHANGED,
       item,
+      index,
     });
   }
 
-  function handleChangePrice(item: LineItem) {
+  function handleChangePrice(item: LineItem, index: number) {
     dispatch({
       type: ReducerActionType.PRICE_CHANGED,
       item,
+      index,
     });
   }
 
@@ -67,6 +55,21 @@ function App() {
     }
     return <button onClick={() => setState(true)}>edit</button>;
   }
+
+  const onDrop: onDropEvent = useCallback((acceptedFiles: File[]) => {
+    acceptedFiles.map((item: File) => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const jsonString = e.target?.result as string;
+        const data = JSON.parse(jsonString);
+
+        updateData(data);
+      };
+      // TODO: show an error if reader.onerror
+      reader.readAsText(item);
+      return item;
+    });
+  }, []);
 
   if (!initialData) return <p>No data</p>
 
@@ -93,7 +96,10 @@ function App() {
       </table>
 
       {hasEditQuery ?
-        <div>{getButton()}</div> :
+        <div>
+          {getButton()}
+          <Dropzone onDrop={onDrop} accept={{ 'application/json': ['.json'] }} />
+        </div> :
         ''
       }
     </div>

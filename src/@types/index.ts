@@ -1,3 +1,5 @@
+import { FileRejection, DropEvent } from "react-dropzone";
+
 export interface LineItem {
   id: number;
   description: string;
@@ -21,8 +23,8 @@ type isEditable = {
 
 export type bodyData = isEditable & {
   lineItems: LineItem[] | [];
-  changeDescription(item: LineItem): void;
-  changePrice(item: LineItem): void;
+  changeDescription(item: LineItem, index: number): void;
+  changePrice(item: LineItem, index: number): void;
 };
 
 export enum ReducerActionType {
@@ -34,5 +36,12 @@ export enum ReducerActionType {
 export interface ReducerAction {
   type: ReducerActionType;
   item: LineItem;
+  index: number;
   payload?: LineItem[];
 }
+
+export type onDropEvent = <T extends File>(
+  acceptedFiles: T[],
+  fileRejections: FileRejection[],
+  event: DropEvent
+) => void;
