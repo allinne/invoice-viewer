@@ -4,6 +4,7 @@ import itemsReducer from './itemsReducer';
 import Header from './components/header';
 import Body from './components/body';
 import Dropzone from './components/dropzone';
+import './styles/app.scss';
 
 function App() {
   const [initialData, setInitialData] = useState<InvoiceJSON>();
@@ -49,12 +50,22 @@ function App() {
   const hasEditQuery = hasEditQueryRegExp.test(window.location.search);
   const [state, setState] = useState(false);
   function getButton() {
-    if (state) {
-      return <button onClick={() => setState(false)}>save</button>;
-    }
-    return <button onClick={() => setState(true)}>edit</button>;
+    const buttonText = state ? 'save' : 'edit';
+
+    return (
+      <div>
+        <button
+          data-testid="edit-button"
+          className="invoice-box__controls-button"
+          onClick={() => setState(!state)}
+        >
+          {buttonText}
+        </button>
+      </div>
+    )
   }
 
+  const [dropState, setDropState] = useState(false);
   const onDrop: onDropEvent = useCallback((acceptedFiles: File[]) => {
     acceptedFiles.map((item: File) => {
       const reader = new FileReader();
@@ -63,14 +74,21 @@ function App() {
         const data = JSON.parse(jsonString);
 
         updateData(data);
+        setDropState(true);
       };
-      // TODO: show an error if reader.onerror
+
       reader.readAsText(item);
       return item;
     });
   }, []);
 
-  if (!initialData) return <p>No data</p>
+  function resetDropState() {
+    setDropState(false);
+  }
+
+  if (!initialData) {
+    return <p>No data</p>;
+  }
 
   return (
     <>
@@ -86,9 +104,13 @@ function App() {
       </Suspense>
 
       {hasEditQuery ?
-        <div>
+        <div className="invoice-box__controls">
+          <Dropzone
+            isDropSucceded={dropState}
+            resetDropState={resetDropState}
+            onDrop={onDrop}
+          />
           {getButton()}
-          <Dropzone onDrop={onDrop} accept={{ 'application/json': ['.json'] }} />
         </div> :
         ''
       }

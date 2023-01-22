@@ -1,7 +1,6 @@
 import { FileRejection, DropEvent } from "react-dropzone";
 
 export interface LineItem {
-  id: number;
   description: string;
   price: number;
 }
@@ -45,3 +44,9 @@ export type onDropEvent = <T extends File>(
   fileRejections: FileRejection[],
   event: DropEvent
 ) => void;
+
+export interface dropzoneProps {
+  isDropSucceded: boolean;
+  resetDropState(): void;
+  onDrop: onDropEvent;
+}

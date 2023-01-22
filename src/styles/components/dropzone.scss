@@ -1,0 +1,36 @@
+@import "../variables";
+
+.invoice-box__dropzone {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding: 24px 32px;
+  border: 1px dotted $primary-color;
+  border-radius: 8px;
+  gap: 24px;
+
+  &--active {
+    background-color: $secondary-color;
+  }
+
+  &-text {
+    line-height: 32px;
+  }
+
+  &-button {
+    padding: 0 12px;
+    transition: all 0.3s ease;
+    border: 1px solid $primary-color;
+    border-radius: 16px;
+    background-color: $neutral-color;
+    color: $primary-color;
+    line-height: 30px;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary-color;
+      color: $neutral-color;
+    }
+  }
+}

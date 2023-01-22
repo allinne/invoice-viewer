@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import parseISO from 'date-fns/fp/parseISO';
 import { InvoiceJSON } from '../@types/index';
+import '../styles/components/header.scss';
 
 function Header(props: InvoiceJSON) {
   function getInvoiceNumber(invoiceId: string): string {
@@ -10,14 +11,18 @@ function Header(props: InvoiceJSON) {
   }
 
   function formatDate(inputDate: string): string {
+    if (inputDate === '') {
+      return '';
+    }
+
     const date = parseISO(inputDate);
     return format(date, "dd/MM/yyyy");
   }
 
   return (
-    <div className='invoice-box__header'>
+    <div className="invoice-box__header" data-testid="invoice-header">
 
-      <div className='invoice-box__header-item'>
+      <div className="invoice-box__header-item">
         <div className="invoice-box__header-cell">
           <img
             alt="logo"
@@ -32,7 +37,7 @@ function Header(props: InvoiceJSON) {
         </div>
       </div>
 
-      <div className='invoice-box__header-item'>
+      <div className="invoice-box__header-item">
         <div className="invoice-box__header-cell invoice-box__header-cell--company">
           <div>collectAI GmbH</div>
           <div>20457 Hamburg</div>
