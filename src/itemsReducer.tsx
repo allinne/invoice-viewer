@@ -12,11 +12,9 @@ function itemsReducer(items: LineItem[], action: ReducerAction): LineItem[] {
         }
       });
     }
-    case ReducerActionType.INITIALIZE_CARD: {
-      return action.payload || [];
-    }
+    case ReducerActionType.INITIALIZE_CARD:
     default: {
-      throw Error('Unknown action: ' + action.type);
+      return action.payload || [];
     }
   }
 }

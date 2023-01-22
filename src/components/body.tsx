@@ -1,5 +1,6 @@
 import { FormEvent } from 'react';
 import { bodyData, LineItem } from '../@types/index';
+import '../styles/components/body.scss';
 
 export function formatPrice(price: number) {
   return String(price).replaceAll('.', ',');
@@ -18,15 +19,6 @@ function Body(props: bodyData) {
     return Math.round(total * vat) / 100;
   }
 
-  function handleInputPrice(ev: FormEvent<HTMLInputElement>) {
-    const numberRegExp = new RegExp(/^(\d+,+){2,}$/gm);
-    const match = numberRegExp.test(ev.currentTarget.value);
-
-    if (match) {
-      ev.preventDefault();
-    }
-  }
-
   function handleChangePrice(ev: FormEvent<HTMLInputElement>, item: LineItem, index: number) {
     const inputNumber = ev.currentTarget.value;
     const formatted = Number(inputNumber.replaceAll(',', '.'));
@@ -40,19 +32,27 @@ function Body(props: bodyData) {
     );
   }
 
-  const listItems = (props.lineItems || []).map((item: LineItem, index: number) =>
-    <tr className="item last" key={index} data-testid="list-item">
-      <td>{item.description}</td>
-      <td>{formatPrice(item.price)} {currencyName}</td>
-    </tr>
-  );
+  const listItemIndex = props.lineItems.length - 1;
+  function getItemClassName(index: number): string {
+    const initialItemClassName = 'invoice-box__body-item';
+    return index === listItemIndex ? `${initialItemClassName} ${initialItemClassName}--last` : initialItemClassName;
+  }
+
+  const listItems = (props.lineItems || []).map((item: LineItem, index: number) => {
+    return (
+      <tr className={getItemClassName(index)} key={index} data-testid="line-item">
+        <td data-testid="line-item-description">{item.description}</td>
+        <td data-testid="line-item-price">{formatPrice(item.price)} {currencyName}</td>
+      </tr>
+    );
+  });
 
   const editableListItems = (props.lineItems || []).map((item: LineItem, index: number) =>
-    <tr className="item last" key={index} data-testid="list-item-editable">
+    <tr className={getItemClassName(index)} key={index} data-testid="line-item-editable">
       <td>
         <input
-          className='invoice-body-list__item-input'
-          data-testid="list-item-description-editable"
+          className="invoice-box__body-input invoice-box__body-input--wide"
+          data-testid="line-item-description-editable"
           type="text"
           value={item.description}
           onChange={(ev: FormEvent<HTMLInputElement>) => {
@@ -67,16 +67,16 @@ function Body(props: bodyData) {
         />
       </td>
       <td>
-      <input
-          data-testid="list-item-price-editable"
-          type="text"
-          value={formatPrice(item.price)}
-          onBeforeInput={(ev: FormEvent<HTMLInputElement>) => { handleInputPrice(ev) }}
-          onChange={(ev: FormEvent<HTMLInputElement>) => {
-            handleChangePrice(ev, item, index);
-          }}
+        <input
+            className="invoice-box__body-input"
+            data-testid="line-item-price-editable"
+            type="text"
+            value={formatPrice(item.price)}
+            onChange={(ev: FormEvent<HTMLInputElement>) => {
+              handleChangePrice(ev, item, index);
+            }}
         />
-        {currencyName}
+        &nbsp;{currencyName}
       </td>
     </tr>
   );
@@ -87,19 +87,30 @@ function Body(props: bodyData) {
   }
 
   return (
-    <>
-    {props.isEditable ? editableListItems : listItems}
+    <table
+      cellPadding="0"
+      cellSpacing="0"
+      className="invoice-box__body"
+      data-testid="invoice-body"
+    >
+      <tbody>
+        <tr className="invoice-box__body-heading">
+          <td>Item</td>
+          <td>Price</td>
+        </tr>
 
-    <tr className="total">
-      <td></td>
+        {props.isEditable ? editableListItems : listItems}
 
-      <td data-testid="total">Total: {formatPrice(total)} {currencyName}</td>
-    </tr>
-    <tr className="vat">
-      <td></td>
-      <td data-testid="vat">VAT ({vatValue}%): {formatPrice(calcVAT(total))} {currencyName}</td>
-    </tr>
-    </>
+        <tr className="invoice-box__body-total">
+          <td></td>
+          <td data-testid="total">Total: {formatPrice(total)} {currencyName}</td>
+        </tr>
+        <tr className="invoice-box__body-vat">
+          <td></td>
+          <td data-testid="vat">VAT ({vatValue}%): {formatPrice(calcVAT(total))} {currencyName}</td>
+        </tr>
+      </tbody>
+    </table>
   );
 }
 

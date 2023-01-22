@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import parseISO from 'date-fns/fp/parseISO';
 import { InvoiceJSON } from '../@types/index';
+import '../styles/components/header.scss';
 
 function Header(props: InvoiceJSON) {
   function getInvoiceNumber(invoiceId: string): string {
@@ -10,61 +11,46 @@ function Header(props: InvoiceJSON) {
   }
 
   function formatDate(inputDate: string): string {
+    if (inputDate === '') {
+      return '';
+    }
+
     const date = parseISO(inputDate);
     return format(date, "dd/MM/yyyy");
   }
 
   return (
-    <>
-    <tr className="top">
-      <td colSpan={2}>
-        <table>
-          <tbody>
-            <tr>
-              <td className="title">
-                <img
-                  src="cai_logo.svg"
-                  className="logo"
-                  alt="logo"
-                />
-              </td>
+    <div className="invoice-box__header" data-testid="invoice-header">
 
-              <td data-testid="invoice-id-dates">
-                Invoice #: {getInvoiceNumber(props.id)} <br />
-                Created: {formatDate(props.createdAt)} <br />
-                Due: {formatDate(props.dueAt)}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </td>
-    </tr>
+      <div className="invoice-box__header-item">
+        <div className="invoice-box__header-cell">
+          <img
+            alt="logo"
+            className="invoice-box__header-logo"
+            src="cai_logo.svg"
+          />
+        </div>
+        <div className="invoice-box__header-cell invoice-box__header-cell--right">
+          <div data-testid="invoice-id">Invoice #: {getInvoiceNumber(props.id)}</div>
+          <div data-testid="invoice-created-at">Created: {formatDate(props.createdAt)}</div>
+          <div data-testid="invoice-due">Due: {formatDate(props.dueAt)}</div>
+        </div>
+      </div>
 
-    <tr className="information">
-      <td colSpan={2}>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                collectAI GmbH
-                <br />
-                20457 Hamburg
-                <br />
-                Hamburg, Germany
-              </td>
+      <div className="invoice-box__header-item">
+        <div className="invoice-box__header-cell invoice-box__header-cell--company">
+          <div>collectAI GmbH</div>
+          <div>20457 Hamburg</div>
+          <div>Hamburg, Germany</div>
+        </div>
+        <div className="invoice-box__header-cell invoice-box__header-cell--right invoice-box__header-cell--company">
+          <div data-testid="company">{props.company}</div>
+          <div data-testid="fullName">{props.fullName}</div>
+          <div data-testid="email">{props.email}</div>
+        </div>
+      </div>
 
-              <td data-testid="company">
-                {props.company}
-                <br />
-                {props.fullName}<br />
-                {props.email}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </td>
-    </tr>
-    </>
+    </div>
   );
 }
 

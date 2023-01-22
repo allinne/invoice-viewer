@@ -1,10 +1,10 @@
 import { useReducer, useState, useEffect, useCallback, Reducer, Suspense } from 'react'
 import { InvoiceJSON, LineItem, ReducerAction, ReducerActionType, onDropEvent } from './@types/index';
 import itemsReducer from './itemsReducer';
-import Header from './components/Header';
-import Body from './components/Body';
-import Dropzone from './components/Dropzone';
-import './styles/App.scss';
+import Header from './components/header';
+import Body from './components/body';
+import Dropzone from './components/dropzone';
+import './styles/app.scss';
 
 function App() {
   const [initialData, setInitialData] = useState<InvoiceJSON>();
@@ -50,12 +50,22 @@ function App() {
   const hasEditQuery = hasEditQueryRegExp.test(window.location.search);
   const [state, setState] = useState(false);
   function getButton() {
-    if (state) {
-      return <button onClick={() => setState(false)}>save</button>;
-    }
-    return <button onClick={() => setState(true)}>edit</button>;
+    const buttonText = state ? 'save' : 'edit';
+
+    return (
+      <div>
+        <button
+          data-testid="edit-button"
+          className="invoice-box__controls-button"
+          onClick={() => setState(!state)}
+        >
+          {buttonText}
+        </button>
+      </div>
+    )
   }
 
+  const [dropState, setDropState] = useState(false);
   const onDrop: onDropEvent = useCallback((acceptedFiles: File[]) => {
     acceptedFiles.map((item: File) => {
       const reader = new FileReader();
@@ -64,45 +74,47 @@ function App() {
         const data = JSON.parse(jsonString);
 
         updateData(data);
+        setDropState(true);
       };
-      // TODO: show an error if reader.onerror
+
       reader.readAsText(item);
       return item;
     });
   }, []);
 
-  if (!initialData) return <p>No data</p>
+  function resetDropState() {
+    setDropState(false);
+  }
+
+  if (!initialData) {
+    return <p>No data</p>;
+  }
 
   return (
-    <div>
-      <table cellPadding="0" cellSpacing="0">
-        <tbody>
-          <Header { ...initialData }/>
+    <>
+      <Header { ...initialData }/>
 
-          <tr className="heading">
-            <td>Item</td>
-            <td>Price</td>
-          </tr>
-
-          <Suspense fallback={<p>loading...</p>}>
-            <Body
-              isEditable={state}
-              lineItems={data}
-              changeDescription={handleChangeDescription}
-              changePrice={handleChangePrice}
-            />
-          </Suspense>
-        </tbody>
-      </table>
+      <Suspense fallback={<p>loading...</p>}>
+        <Body
+          isEditable={state}
+          lineItems={data}
+          changeDescription={handleChangeDescription}
+          changePrice={handleChangePrice}
+        />
+      </Suspense>
 
       {hasEditQuery ?
-        <div>
+        <div className="invoice-box__controls">
+          <Dropzone
+            isDropSucceded={dropState}
+            resetDropState={resetDropState}
+            onDrop={onDrop}
+          />
           {getButton()}
-          <Dropzone onDrop={onDrop} accept={{ 'application/json': ['.json'] }} />
         </div> :
         ''
       }
-    </div>
+    </>
   );
 }
 

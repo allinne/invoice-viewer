@@ -1,0 +1,40 @@
+.invoice-box__header {
+  &-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+  }
+
+  &-cell {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 5px 20px;
+
+    &--company {
+      padding-bottom: 40px;
+    }
+
+    &--right {
+      display: flex;
+      align-items: flex-end;
+    }
+  }
+
+  &-logo {
+    width: 100%;
+    max-width: 300px;
+    border: 0;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .invoice-box__header {
+    &-item {
+      flex-direction: column;
+    }
+
+    &-cell {
+      align-items: center;
+    }
+  }
+}

@@ -1,0 +1,73 @@
+@import "../variables";
+
+.invoice-box__body {
+  width: 100%;
+  line-height: inherit;
+  text-align: left;
+
+  td {
+    padding: 5px;
+    vertical-align: top;
+
+    &:nth-child(2) {
+      text-align: right;
+    }
+  }
+
+  &-heading {
+    td {
+      border-bottom: 1px solid $info-color;
+      background: $secondary-color;
+      font-weight: bold;
+    }
+  }
+
+  &-item {
+    td {
+      border-bottom: 1px solid $invoice-border-color;
+
+      &:nth-child(1) {
+        width: 100%;
+      }
+
+      &:nth-child(2) {
+        white-space: nowrap;
+      }
+    }
+
+    &--last {
+      td {
+        border-bottom: 0;
+      }
+    }
+  }
+
+  &-total {
+    td {
+      &:nth-child(2) {
+        border-top: 2px solid $invoice-border-color;
+        font-weight: bold;
+      }
+    }
+  }
+
+  &-vat {
+    td {
+      border-top: 2px solid $invoice-border-color;
+      white-space: nowrap;
+    }
+  }
+
+  &-input {
+    width: 80px;
+    padding: 4px 8px;
+    border: 1px solid $info-color;
+    border-radius: 4px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+
+    &--wide {
+      width: 100%;
+    }
+  }
+}

@@ -1,41 +1,56 @@
-import { useDropzone, Accept } from 'react-dropzone';
-import { onDropEvent } from '../@types/index';
+import { useDropzone } from 'react-dropzone';
+import { dropzoneProps } from '../@types/index';
+import '../styles/components/dropzone.scss';
 
-type dropzoneProps = {
-  onDrop: onDropEvent;
-  accept: Accept;
-}
-
-const Dropzone = (props: dropzoneProps) => {
+function Dropzone(props: dropzoneProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: props.onDrop,
-    accept: props.accept,
+    accept: { 'application/json': ['.json'] },
     multiple: false,
   });
 
   const getClassName = (className: string, isActive: boolean) => {
-    if (!isActive) return className;
-    return `${className} ${className}-active`;
+    return isActive ? `${className} ${className}--active` : className;
   };
 
   /* 
     useDropzone hooks exposes two functions called getRootProps and getInputProps
     and also exposes isDragActive boolean
   */
-  return (
-    <div className={getClassName("dropzone", isDragActive)} {...getRootProps()}>
-      <input className="dropzone-input" {...getInputProps()} />
-      <div className="text-center">
-        {isDragActive ? (
-          <p className="dropzone-content">Release to drop the files here</p>
-        ) : (
-          <p className="dropzone-content">
-            Drag &apos;n&apos; drop some files here, or click to select files
-          </p>
-        )}
+  const dropZone = (
+    <div
+      className={getClassName('invoice-box__dropzone', isDragActive)} {...getRootProps()}
+      data-testid="drop-container"
+    >
+      <input className="invoice-box__dropzone-input" { ...getInputProps() } />
+      {isDragActive ? (
+        <div className="invoice-box__dropzone-text">Release to drop the files here</div>
+      ) : (
+        <div className="invoice-box__dropzone-text">
+          Drag &apos;n&apos; drop some files here, or click to select files
+        </div>
+      )}
+    </div>
+  );
+
+  const successMessage = (
+    <div className="invoice-box__dropzone">
+      <div className="invoice-box__dropzone-text" data-testid="successful-drop">
+        Invoice data was successfuly parsed
+      </div>
+      <div>
+        <button
+          className="invoice-box__dropzone-button"
+          onClick={props.resetDropState}
+          data-testid="drop-again-button"
+        >
+          Drop again
+        </button>
       </div>
     </div>
   );
-};
+
+  return props.isDropSucceded ? successMessage : dropZone;
+}
 
 export default Dropzone;

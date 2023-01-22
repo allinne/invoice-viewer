@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="24" failures="0" errors="0" time="1.378">
+  <testsuite name="&lt;Dropzone /&gt;" errors="0" failures="0" skipped="0" timestamp="2023-01-22T19:18:20" time="0.469" tests="7">
+    <testcase classname="&lt;Dropzone /&gt; renders a component with isDropSucceded=true" name="&lt;Dropzone /&gt; renders a component with isDropSucceded=true" time="0.017">
+    </testcase>
+    <testcase classname="&lt;Dropzone /&gt; invokes onDrop when drop event occurs" name="&lt;Dropzone /&gt; invokes onDrop when drop event occurs" time="0.007">
+    </testcase>
+    <testcase classname="&lt;Dropzone /&gt; changes a className when dragEnter occurs" name="&lt;Dropzone /&gt; changes a className when dragEnter occurs" time="0.003">
+    </testcase>
+    <testcase classname="&lt;App /&gt; renders a component with Head and Body components" name="&lt;App /&gt; renders a component with Head and Body components" time="0.012">
+    </testcase>
+    <testcase classname="&lt;App /&gt; - editable mode should change description" name="&lt;App /&gt; - editable mode should change description" time="0.01">
+    </testcase>
+    <testcase classname="&lt;App /&gt; - editable mode should change price" name="&lt;App /&gt; - editable mode should change price" time="0.009">
+    </testcase>
+    <testcase classname="&lt;App /&gt; - editable mode should parse the dropped file content" name="&lt;App /&gt; - editable mode should parse the dropped file content" time="0.015">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;Header /&gt;" errors="0" failures="0" skipped="0" timestamp="2023-01-22T19:18:20" time="0.145" tests="2">
+    <testcase classname="&lt;Header /&gt; renders a component with invoice data" name="&lt;Header /&gt; renders a component with invoice data" time="0.01">
+    </testcase>
+    <testcase classname="&lt;Header /&gt; renders a component with empty data" name="&lt;Header /&gt; renders a component with empty data" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;Body /&gt;" errors="0" failures="0" skipped="0" timestamp="2023-01-22T19:18:20" time="0.135" tests="8">
+    <testcase classname="&lt;Body /&gt; - readonly mode renders a component with an empty list" name="&lt;Body /&gt; - readonly mode renders a component with an empty list" time="0.008">
+    </testcase>
+    <testcase classname="&lt;Body /&gt; - readonly mode renders a component with a list of 2 items" name="&lt;Body /&gt; - readonly mode renders a component with a list of 2 items" time="0.003">
+    </testcase>
+    <testcase classname="&lt;Body /&gt; - readonly mode renders a component with calculated total and VAT" name="&lt;Body /&gt; - readonly mode renders a component with calculated total and VAT" time="0.002">
+    </testcase>
+    <testcase classname="&lt;Body /&gt; - readonly mode should show 2 digits after decimal point in total and VAT" name="&lt;Body /&gt; - readonly mode should show 2 digits after decimal point in total and VAT" time="0.005">
+    </testcase>
+    <testcase classname="&lt;Body /&gt; - editable mode renders a component with editable description and price" name="&lt;Body /&gt; - editable mode renders a component with editable description and price" time="0.005">
+    </testcase>
+    <testcase classname="&lt;Body /&gt; - editable mode should call changeDescription" name="&lt;Body /&gt; - editable mode should call changeDescription" time="0.007">
+    </testcase>
+    <testcase classname="&lt;Body /&gt; - editable mode should call changePrice" name="&lt;Body /&gt; - editable mode should call changePrice" time="0.004">
+    </testcase>
+    <testcase classname="&lt;Body /&gt; - editable mode should convert a wrong value into zero" name="&lt;Body /&gt; - editable mode should convert a wrong value into zero" time="0.003">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;Dropzone /&gt;" errors="0" failures="0" skipped="0" timestamp="2023-01-22T19:18:21" time="0.117" tests="3">
+    <testcase classname="&lt;Dropzone /&gt; renders a component with isDropSucceded=true" name="&lt;Dropzone /&gt; renders a component with isDropSucceded=true" time="0.011">
+    </testcase>
+    <testcase classname="&lt;Dropzone /&gt; invokes onDrop when drop event occurs" name="&lt;Dropzone /&gt; invokes onDrop when drop event occurs" time="0.007">
+    </testcase>
+    <testcase classname="&lt;Dropzone /&gt; changes a className when dragEnter occurs" name="&lt;Dropzone /&gt; changes a className when dragEnter occurs" time="0.003">
+    </testcase>
+  </testsuite>
+  <testsuite name="itemsReducer" errors="0" failures="0" skipped="0" timestamp="2023-01-22T19:18:21" time="0.068" tests="4">
+    <testcase classname="itemsReducer - description or price are changed DESCRIPTION_CHANGED: should return the list with modified item" name="itemsReducer - description or price are changed DESCRIPTION_CHANGED: should return the list with modified item" time="0.001">
+    </testcase>
+    <testcase classname="itemsReducer - description or price are changed PRICE_CHANGED: should return the list with modified item" name="itemsReducer - description or price are changed PRICE_CHANGED: should return the list with modified item" time="0">
+    </testcase>
+    <testcase classname="itemsReducer - INITIALIZE_CARD should return the completely modified list" name="itemsReducer - INITIALIZE_CARD should return the completely modified list" time="0">
+    </testcase>
+    <testcase classname="itemsReducer - INITIALIZE_CARD should return an empty list" name="itemsReducer - INITIALIZE_CARD should return an empty list" time="0.001">
+    </testcase>
+  </testsuite>
+</testsuites>
