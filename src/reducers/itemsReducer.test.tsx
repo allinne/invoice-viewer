@@ -1,5 +1,5 @@
 import reducer from './itemsReducer';
-import { LineItem, ReducerAction, ReducerActionType } from './@types/index';
+import { LineItem, ReducerAction, ReducerActionType } from '../@types/index';
 
 describe('itemsReducer', () => {
 

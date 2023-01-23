@@ -1,7 +1,7 @@
 import { useReducer, useState, useEffect, useCallback, Reducer, Suspense } from 'react'
 import { InvoiceJSON, LineItem, ReducerAction, ReducerActionType, onDropEvent } from './@types/index';
 import { validateJSON } from './utils/index';
-import itemsReducer from './itemsReducer';
+import itemsReducer from './reducers/itemsReducer';
 import Header from './components/header';
 import Body from './components/body';
 import Dropzone from './components/dropzone';
@@ -31,17 +31,13 @@ function App() {
   const initialLineItems: LineItem[] = initialData ? initialData.lineItems : [];
   const [data, dispatch] = useReducer<Reducer<LineItem[], ReducerAction>>(itemsReducer, initialLineItems);
 
-  function handleChangeDescription(item: LineItem, index: number) {
+  function handleChangeInput(
+    type: ReducerActionType.DESCRIPTION_CHANGED | ReducerActionType.PRICE_CHANGED,
+    item: LineItem,
+    index: number
+  ) {
     dispatch({
-      type: ReducerActionType.DESCRIPTION_CHANGED,
-      item,
-      index,
-    });
-  }
-
-  function handleChangePrice(item: LineItem, index: number) {
-    dispatch({
-      type: ReducerActionType.PRICE_CHANGED,
+      type,
       item,
       index,
     });
@@ -89,7 +85,7 @@ function App() {
     });
   }, []);
 
-  function resetDropState() {
+  function resetDropStates() {
     setDropState(false);
     setErrorState(false);
   }
@@ -100,14 +96,14 @@ function App() {
 
   return (
     <>
-      <Header { ...initialData }/>
-
       <Suspense fallback={<p>loading...</p>}>
+        <Header { ...initialData }/>
+
         <Body
           isEditable={state}
           lineItems={data}
-          changeDescription={handleChangeDescription}
-          changePrice={handleChangePrice}
+          changeDescription={(item, index) => handleChangeInput(ReducerActionType.DESCRIPTION_CHANGED, item, index)}
+          changePrice={(item, index) => handleChangeInput(ReducerActionType.PRICE_CHANGED, item, index)}
         />
       </Suspense>
 
@@ -116,7 +112,7 @@ function App() {
           <Dropzone
             isDropSucceded={dropState}
             isDropFailed={errorState}
-            resetDropState={resetDropState}
+            resetDropState={resetDropStates}
             onDrop={onDrop}
           />
           {getButton()}
