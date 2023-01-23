@@ -1,8 +1,8 @@
 import { useDropzone } from 'react-dropzone';
-import { dropzoneProps } from '../@types/index';
+import { DropzoneProps } from '../@types/index';
 import '../styles/components/dropzone.scss';
 
-function Dropzone(props: dropzoneProps) {
+function Dropzone(props: DropzoneProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: props.onDrop,
     accept: { 'application/json': ['.json'] },
@@ -13,10 +13,6 @@ function Dropzone(props: dropzoneProps) {
     return isActive ? `${className} ${className}--active` : className;
   };
 
-  /* 
-    useDropzone hooks exposes two functions called getRootProps and getInputProps
-    and also exposes isDragActive boolean
-  */
   const dropZone = (
     <div
       className={getClassName('invoice-box__dropzone', isDragActive)} {...getRootProps()}
@@ -33,24 +29,39 @@ function Dropzone(props: dropzoneProps) {
     </div>
   );
 
+  const dropAgainButton = (
+    <div>
+      <button
+        className="invoice-box__dropzone-button"
+        onClick={props.resetDropState}
+        data-testid="drop-again-button"
+      >
+        Drop again
+      </button>
+    </div>
+  );
+
   const successMessage = (
     <div className="invoice-box__dropzone">
       <div className="invoice-box__dropzone-text" data-testid="successful-drop">
         Invoice data was successfuly parsed
       </div>
-      <div>
-        <button
-          className="invoice-box__dropzone-button"
-          onClick={props.resetDropState}
-          data-testid="drop-again-button"
-        >
-          Drop again
-        </button>
-      </div>
+      {dropAgainButton}
     </div>
   );
 
-  return props.isDropSucceded ? successMessage : dropZone;
+  const errorMessage = (
+    <div className="invoice-box__dropzone">
+      <div className="invoice-box__dropzone-text invoice-box__dropzone-text--error" data-testid="error-drop">
+        Wrong JSON format
+      </div>
+      {dropAgainButton}
+    </div>
+  );
+
+  const dropBlock = props.isDropSucceded ? successMessage : dropZone;
+
+  return props.isDropFailed ? errorMessage : dropBlock;
 }
 
 export default Dropzone;

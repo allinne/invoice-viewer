@@ -1,19 +1,6 @@
 import { act, fireEvent, render, cleanup, screen } from '@testing-library/react'
 import Dropzone from "./dropzone";
-
-export function mockData(files: File[]) {
-  return {
-    dataTransfer: {
-      files,
-      items: files.map(file => ({
-        kind: 'file',
-        type: file.type,
-        getAsFile: () => file
-      })),
-      types: ['Files']
-    }
-  };
-}
+import { mockData } from '../utils/tests';
 
 describe('<Dropzone />', () => {
   const onDrop = jest.fn();
@@ -32,6 +19,7 @@ describe('<Dropzone />', () => {
     render(
       <Dropzone
         isDropSucceded={true}
+        isDropFailed={false}
         resetDropState={resetDropState}
         onDrop={onDrop}
       />
@@ -47,10 +35,31 @@ describe('<Dropzone />', () => {
     expect(resetDropState).toHaveBeenCalled();
   });
 
+  it('renders a component with isDropFailed=true', async () => {
+    render(
+      <Dropzone
+        isDropSucceded={true}
+        isDropFailed={true}
+        resetDropState={resetDropState}
+        onDrop={onDrop}
+      />
+    );
+  
+    const message = await screen.findByTestId('error-drop');
+    const dropAgainButton = await screen.findByTestId('drop-again-button');
+
+    expect(message.innerHTML).toStrictEqual('Wrong JSON format');
+    expect(resetDropState).not.toHaveBeenCalled();
+
+    fireEvent.click(dropAgainButton);
+    expect(resetDropState).toHaveBeenCalled();
+  });
+
   it('invokes onDrop when drop event occurs', async () => {
     render(
       <Dropzone
         isDropSucceded={false}
+        isDropFailed={false}
         resetDropState={resetDropState}
         onDrop={onDrop}
       />
@@ -72,6 +81,7 @@ describe('<Dropzone />', () => {
     render(
       <Dropzone
         isDropSucceded={false}
+        isDropFailed={false}
         resetDropState={resetDropState}
         onDrop={onDrop}
       />

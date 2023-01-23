@@ -65,9 +65,11 @@
     border-radius: 4px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 16px;
+    text-align: right;
 
     &--wide {
       width: 100%;
+      text-align: left;
     }
   }
 }

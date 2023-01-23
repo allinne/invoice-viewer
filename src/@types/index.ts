@@ -16,15 +16,9 @@ export interface InvoiceJSON {
   lineItems: LineItem[];
 }
 
-type isEditable = {
+export interface BodyData extends EditableLineItemsData {
   isEditable: boolean;
 }
-
-export type bodyData = isEditable & {
-  lineItems: LineItem[] | [];
-  changeDescription(item: LineItem, index: number): void;
-  changePrice(item: LineItem, index: number): void;
-};
 
 export enum ReducerActionType {
   DESCRIPTION_CHANGED,
@@ -45,8 +39,18 @@ export type onDropEvent = <T extends File>(
   event: DropEvent
 ) => void;
 
-export interface dropzoneProps {
+export interface DropzoneProps {
   isDropSucceded: boolean;
+  isDropFailed: boolean;
   resetDropState(): void;
   onDrop: onDropEvent;
+}
+
+export interface LineItemsData {
+  lineItems: LineItem[];
+}
+
+export interface EditableLineItemsData extends LineItemsData {
+  changeDescription(item: LineItem, index: number): void;
+  changePrice(item: LineItem, index: number): void;
 }

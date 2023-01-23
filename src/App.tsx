@@ -1,5 +1,6 @@
 import { useReducer, useState, useEffect, useCallback, Reducer, Suspense } from 'react'
 import { InvoiceJSON, LineItem, ReducerAction, ReducerActionType, onDropEvent } from './@types/index';
+import { validateJSON } from './utils/index';
 import itemsReducer from './itemsReducer';
 import Header from './components/header';
 import Body from './components/body';
@@ -66,15 +67,21 @@ function App() {
   }
 
   const [dropState, setDropState] = useState(false);
+  const [errorState, setErrorState] = useState(false);
   const onDrop: onDropEvent = useCallback((acceptedFiles: File[]) => {
     acceptedFiles.map((item: File) => {
       const reader = new FileReader();
+
       reader.onload = function(e) {
         const jsonString = e.target?.result as string;
         const data = JSON.parse(jsonString);
 
-        updateData(data);
-        setDropState(true);
+        if (validateJSON(data)) {
+          updateData(data);
+          setDropState(true);
+        } else {
+          setErrorState(true);
+        }
       };
 
       reader.readAsText(item);
@@ -84,6 +91,7 @@ function App() {
 
   function resetDropState() {
     setDropState(false);
+    setErrorState(false);
   }
 
   if (!initialData) {
@@ -107,6 +115,7 @@ function App() {
         <div className="invoice-box__controls">
           <Dropzone
             isDropSucceded={dropState}
+            isDropFailed={errorState}
             resetDropState={resetDropState}
             onDrop={onDrop}
           />
