@@ -6,15 +6,23 @@ export const currencyName = 'EUR';
 export const vatValue = 19;
 
 export function validateJSON(data: InvoiceJSON): boolean {
-  const hasBaseProps = Boolean(data.id && data.email && data.fullName && data.company && data.createdAt && data.dueAt);
+  const isDataObject = typeof data === 'object' && data !== null;
+  const hasBaseProps = 'id' in data &&
+    'email' in data &&
+    'fullName' in data &&
+    'company' in data &&
+    'createdAt' in data &&
+    'dueAt' in data;
+
   let hasLineItems = false;
-  if (data.lineItems) {
-    hasLineItems = data.lineItems.reduce((acc, currentValue: LineItem) => {
-      return acc && Boolean(currentValue.description && currentValue.price);
-    }, true);
+  if (data.lineItems?.length) {
+    hasLineItems = data.lineItems.some((item: LineItem) => {
+      return 'description' in item &&
+        'price' in item;
+    });
   }
 
-  return hasBaseProps && hasLineItems;
+  return isDataObject && hasBaseProps && hasLineItems;
 }
 
 export function getInvoiceNumber(invoiceId: string): string {

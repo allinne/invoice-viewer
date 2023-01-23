@@ -1,4 +1,4 @@
-import { LineItem, ReducerAction, ReducerActionType } from './@types/index';
+import { LineItem, ReducerAction, ReducerActionType } from '../@types/index';
 
 function itemsReducer(items: LineItem[], action: ReducerAction): LineItem[] {
   switch (action.type) {
