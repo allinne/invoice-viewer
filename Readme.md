@@ -44,7 +44,7 @@ Install it from GitHub using the following commands
 
 The most challenging part was to stop improving :-) So here is a list of improvements which might be done:
 * UX: show the “Save” button active only if input data differs from initial, otherwise disabled
-* Use [https://swr.vercel.app/](SWR) instead of `fetch` to cache file content
+* Use [SWR](https://swr.vercel.app/) instead of `fetch` to cache file content
 * Prettier
 * Autoprefixer
 * Price validation
