@@ -1,6 +1,7 @@
 import { act, cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from "./App";
-import { mockData } from './components/dropzone.test';
+import { mockData } from './utils/tests';
+import { json, droppedJSON, droppedWrongJSON } from './fixtures/tests';
 
 describe('<App />', () => {
   let originalFetch: (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
@@ -88,7 +89,7 @@ describe('<App />', () => {
       expect(items[editedItemIndex]).toHaveAttribute('value', editedItemDescription);
     });
 
-    it('should parse the dropped file content', async () => {
+    it('should successfuly parse the dropped file content', async () => {
       render(
         <App/>
       );
@@ -119,43 +120,35 @@ describe('<App />', () => {
 
       expect(dropContainer).toBeTruthy();
     });
+
+    it('should show an error if JSON file has wrong format', async () => {
+      render(
+        <App/>
+      );
+      const dropContainer = await screen.findByTestId('drop-container');
+      const file = new File(
+        [ JSON.stringify(droppedWrongJSON) ],
+        'ping.json',
+        { type: 'application/json' }
+      );
+      const data = mockData([file]);
+  
+      await act(
+        () => fireEvent.drop(
+          dropContainer,
+          data,
+        )
+      );
+
+      const invoiceId = await screen.findByTestId('invoice-id');
+      const items = await screen.findAllByTestId('line-item-price');
+      const errorMessage = await screen.findAllByTestId('error-drop');
+      
+      await waitFor(() => {
+        expect(invoiceId).toHaveTextContent('Invoice #: 7c5821b6d955');
+        expect(items.length).toStrictEqual(2);
+        expect(errorMessage).toBeTruthy();
+      });
+    });
   });
 });
-
-const json = {
-  "id": "d471c483-f15f-490b-adb3-7c5821b6d955",
-  "lineItems": [
-    {
-      "description": "Waistcoat schlitz cronut wolf.",
-      "price": 21.23
-    },
-    {
-      "description": "Generating the bus won't do anything, we need to compress the cross-platform JSON card!",
-      "price": 10.71
-    }
-  ],
-  "email": "austinhackett@durgan.org",
-  "fullName": "Delaney Howell",
-  "company": "Kassulke Group",
-  "createdAt": "2021-10-11",
-  "dueAt": "2021-11-01"
-};
-
-const droppedJSON = {
-  "id": "d471c483-f15f-490b-adb3-7c5821b6d955",
-  "lineItems": [
-    {
-      "description": "Test drop file 1",
-      "price": 84.44
-    },
-    {
-      "description": "Test drop file 2",
-      "price": 97.55
-    }
-  ],
-  "email": "user@email.com",
-  "fullName": "Elon Mask",
-  "company": "Kaufland",
-  "createdAt": "2023-10-11",
-  "dueAt": "2023-11-01"
-};

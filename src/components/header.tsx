@@ -1,24 +1,8 @@
-import { format } from "date-fns";
-import parseISO from 'date-fns/fp/parseISO';
 import { InvoiceJSON } from '../@types/index';
+import { getInvoiceNumber, formatDate } from '../utils/index';
 import '../styles/components/header.scss';
 
 function Header(props: InvoiceJSON) {
-  function getInvoiceNumber(invoiceId: string): string {
-    const invoiceIdRegExp = new RegExp(/^(?:\w+-){4}(\w+)+$/gm);
-    const match = invoiceIdRegExp.exec(invoiceId);
-    return match ? match[1] : '';
-  }
-
-  function formatDate(inputDate: string): string {
-    if (inputDate === '') {
-      return '';
-    }
-
-    const date = parseISO(inputDate);
-    return format(date, "dd/MM/yyyy");
-  }
-
   return (
     <div className="invoice-box__header" data-testid="invoice-header">
 
