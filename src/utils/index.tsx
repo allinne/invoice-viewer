@@ -54,10 +54,9 @@ export function formatPrice(price: number) {
 }
 
 export function getItemClassName(
-  itemsLength: number,
+  lastItemIndex: number,
   index: number,
   initialItemClassName = 'invoice-box__body-item'
 ): string {
-  const lastItemIndex = itemsLength - 1;
   return index === lastItemIndex ? `${initialItemClassName} ${initialItemClassName}--last` : initialItemClassName;
 }

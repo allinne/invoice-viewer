@@ -43,6 +43,8 @@ describe('<LineItems />', () => {
 
     expect(screen.queryAllByTestId('line-item').length).toStrictEqual(2);
     expect(screen.queryAllByTestId('line-item-editable').length).toStrictEqual(0);
+    expect(listItems[0].getAttribute('class')).toStrictEqual('invoice-box__body-item');
+    expect(listItems[1].getAttribute('class')).toStrictEqual('invoice-box__body-item invoice-box__body-item--last');
 
     const firstItemElement = listItems[0].getElementsByTagName('td');
     expect(firstItemElement[0]).toHaveTextContent(firstItem.description);

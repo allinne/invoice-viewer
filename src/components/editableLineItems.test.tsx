@@ -26,8 +26,12 @@ describe('<EditableLineItems />', () => {
 
   afterEach(cleanup);
 
-  it('renders a component with editable description and price', () => {  
-    expect(screen.queryAllByTestId('line-item-editable').length).toStrictEqual(2);
+  it('renders a component with editable description and price', async () => {  
+    const items = await screen.findAllByTestId('line-item-editable');
+
+    expect(items.length).toStrictEqual(2);
+    expect(items[0].getAttribute('class')).toStrictEqual('invoice-box__body-item');
+    expect(items[1].getAttribute('class')).toStrictEqual('invoice-box__body-item invoice-box__body-item--last');
   });
 
   it('should call changeDescription', async () => {  

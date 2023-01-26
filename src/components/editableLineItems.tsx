@@ -16,8 +16,10 @@ function EditableLineItems(props: EditableLineItemsData) {
     );
   }
 
+  const lastItemIndex = props.lineItems.length - 1;
+
   const editableLineItems = props.lineItems.map((item: LineItem, index: number) =>
-    <tr className={getItemClassName(props.lineItems.length, index)} key={index} data-testid="line-item-editable">
+    <tr className={getItemClassName(lastItemIndex, index)} key={index} data-testid="line-item-editable">
       <td>
         <input
           className="invoice-box__body-input invoice-box__body-input--wide"
