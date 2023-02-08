@@ -8,8 +8,6 @@ import Dropzone from './components/dropzone';
 import './styles/app.scss';
 
 function App() {
-  const [initialData, setInitialData] = useState<InvoiceJSON>();
-
   useEffect(() => {
     fetch('/invoice.json')
       .then((res) => res.json())
@@ -19,17 +17,13 @@ function App() {
   }, []);
 
   function updateData(data: InvoiceJSON) {
-    setInitialData(data);
     dispatch({
       type: ReducerActionType.INITIALIZE_CARD,
-      item: data.lineItems[0],
-      index: 0,
-      payload: data.lineItems,
+      data,
     });
   }
 
-  const initialLineItems: LineItem[] = initialData ? initialData.lineItems : [];
-  const [data, dispatch] = useReducer<Reducer<LineItem[], ReducerAction>>(itemsReducer, initialLineItems);
+  const [data, dispatch] = useReducer<Reducer<InvoiceJSON, ReducerAction>>(itemsReducer, emptyInvoiceData);
 
   function handleChangeInput(
     type: ReducerActionType.DESCRIPTION_CHANGED | ReducerActionType.PRICE_CHANGED,
@@ -40,6 +34,7 @@ function App() {
       type,
       item,
       index,
+      data,
     });
   }
 
@@ -90,18 +85,14 @@ function App() {
     setErrorState(false);
   }
 
-  if (!initialData) {
-    return <p>No data</p>;
-  }
-
   return (
     <>
       <Suspense fallback={<p>loading...</p>}>
-        <Header { ...initialData }/>
+        <Header { ...data }/>
 
         <Body
           isEditable={state}
-          lineItems={data}
+          lineItems={data.lineItems}
           changeDescription={(item, index) => handleChangeInput(ReducerActionType.DESCRIPTION_CHANGED, item, index)}
           changePrice={(item, index) => handleChangeInput(ReducerActionType.PRICE_CHANGED, item, index)}
         />
@@ -122,5 +113,15 @@ function App() {
     </>
   );
 }
+
+const emptyInvoiceData = {
+  id: '',
+  email: '',
+  fullName: '',
+  company: '',
+  createdAt: '',
+  dueAt: '',
+  lineItems: [],
+};
 
 export default App;

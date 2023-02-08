@@ -19,9 +19,11 @@ describe('<App />', () => {
     });
 
   it('renders a component with Head and Body components', async () => {
-    render(
-      <App/>
-    );
+    await act(() => {
+      render(
+        <App/>
+      );
+      });
 
     const invoiceBody = await screen.findByTestId('invoice-body');
     const invoiceHeader = await screen.findByTestId('invoice-header');
@@ -50,9 +52,11 @@ describe('<App />', () => {
     });
 
     it('should change description', async () => {
-      render(
-        <App/>
-      );
+      await act(() => {
+        render(
+          <App/>
+        );
+      });
 
       const editButton = await screen.findByTestId('edit-button');
       fireEvent.click(editButton);
@@ -70,9 +74,11 @@ describe('<App />', () => {
     });
 
     it('should change price', async () => {
-      render(
-        <App/>
-      );
+      await act(() => {
+        render(
+          <App/>
+        );
+      });
 
       const editButton = await screen.findByTestId('edit-button');
       fireEvent.click(editButton);
@@ -90,9 +96,11 @@ describe('<App />', () => {
     });
 
     it('should successfuly parse the dropped file content', async () => {
-      render(
-        <App/>
-      );
+      await act(() => {
+        render(
+          <App/>
+        );
+      });
 
       const dropContainer = await screen.findByTestId('drop-container');
       const file = new File(
@@ -122,9 +130,12 @@ describe('<App />', () => {
     });
 
     it('should show an error if JSON file has wrong format', async () => {
-      render(
-        <App/>
-      );
+      await act(() => {
+        render(
+          <App/>
+        );
+      });
+
       const dropContainer = await screen.findByTestId('drop-container');
       const file = new File(
         [ JSON.stringify(droppedWrongJSON) ],

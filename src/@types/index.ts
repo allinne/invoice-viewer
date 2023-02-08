@@ -28,9 +28,9 @@ export enum ReducerActionType {
 
 export interface ReducerAction {
   type: ReducerActionType;
-  item: LineItem;
-  index: number;
-  payload?: LineItem[];
+  item?: LineItem;
+  index?: number;
+  data: InvoiceJSON;
 }
 
 export type onDropEvent = <T extends File>(
