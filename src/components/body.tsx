@@ -1,8 +1,12 @@
 import LineItems from './lineItems';
 import EditableLineItems from './editableLineItems';
+import { withLineItems } from '../HOC/withLineItems';
 import { BodyData } from '../@types/index';
 import { currencyName, vatValue, sum, calcVAT, formatPrice } from '../utils/index';
 import '../styles/components/body.scss';
+
+const EditableLineItemsComponent = withLineItems(EditableLineItems);
+const LineItemsComponent = withLineItems(LineItems);
 
 function Body(props: BodyData) {
   let total = 0;
@@ -24,12 +28,16 @@ function Body(props: BodyData) {
         </tr>
 
         {props.isEditable ?
-          <EditableLineItems
+          <EditableLineItemsComponent
             lineItems={props.lineItems}
             changeDescription={props.changeDescription}
             changePrice={props.changePrice}
           /> :
-          <LineItems lineItems={props.lineItems}/>
+          <LineItemsComponent
+            lineItems={props.lineItems}
+            changeDescription={props.changeDescription}
+            changePrice={props.changePrice}
+          />
         }
 
         <tr className="invoice-box__body-total">

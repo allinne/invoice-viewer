@@ -2,8 +2,14 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { LineItem } from '../@types/index';
 import { formatPrice } from '../utils/index';
 import LineItems from "./lineItems";
+import { withLineItems } from '../HOC/withLineItems';
+
+const LineItemsComponent = withLineItems(LineItems);
 
 describe('<LineItems />', () => {
+  const changeDescriptionMock = jest.fn();
+  const changePriceMock = jest.fn();
+
   afterEach(cleanup);
 
   it('renders a component with an empty list', async () => {
@@ -12,8 +18,10 @@ describe('<LineItems />', () => {
     render(
       <table>
         <tbody>
-          <LineItems
+          <LineItemsComponent
             lineItems={data}
+            changeDescription={changeDescriptionMock}
+            changePrice={changePriceMock}
           />
         </tbody>
       </table>
@@ -32,8 +40,10 @@ describe('<LineItems />', () => {
     render(
       <table>
         <tbody>
-          <LineItems
+          <LineItemsComponent
             lineItems={data}
+            changeDescription={changeDescriptionMock}
+            changePrice={changePriceMock}
           />
         </tbody>
       </table>

@@ -1,17 +1,15 @@
-import { LineItem, LineItemsData } from '../@types/index';
-import { currencyName, formatPrice, getItemClassName } from '../utils/index';
+import { LineItem, WithLineItemsData } from '../@types/index';
+import { formatPrice } from '../utils/index';
 
-function LineItems(props: LineItemsData) {
-  const lastItemIndex = props.lineItems.length - 1;
+function LineItems(props: WithLineItemsData) {
+  const descriptionInput = (item: LineItem) => {
+    return item.description;
+  };
+  const priceInput = (item: LineItem) => {
+    return formatPrice(item.price);
+  };
 
-  const lineItems = props.lineItems.map((item: LineItem, index: number) => {
-    return (
-      <tr className={getItemClassName(lastItemIndex, index)} key={index} data-testid="line-item">
-        <td data-testid="line-item-description">{item.description}</td>
-        <td data-testid="line-item-price">{formatPrice(item.price)} {currencyName}</td>
-      </tr>
-    );
-  });
+  const lineItems = props.createLineItems(descriptionInput, priceInput);
 
   return (
     <>

@@ -1,6 +1,7 @@
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import { LineItem } from '../@types/index';
 import EditableLineItems from './editableLineItems';
+import { withLineItems } from '../HOC/withLineItems';
 
 describe('<EditableLineItems />', () => {
   const changeDescriptionMock = jest.fn();
@@ -10,11 +11,13 @@ describe('<EditableLineItems />', () => {
     { description: 'Test data 2', price: 45.0 },
   ];
 
+  const EditableLineItemsComponent = withLineItems(EditableLineItems);
+
   beforeEach(() => {
     render(
       <table>
         <tbody>
-          <EditableLineItems
+          <EditableLineItemsComponent
             lineItems={data}
             changeDescription={changeDescriptionMock}
             changePrice={changePriceMock}
@@ -27,7 +30,7 @@ describe('<EditableLineItems />', () => {
   afterEach(cleanup);
 
   it('renders a component with editable description and price', async () => {  
-    const items = await screen.findAllByTestId('line-item-editable');
+    const items = await screen.findAllByTestId('line-item');
 
     expect(items.length).toStrictEqual(2);
     expect(items[0].getAttribute('class')).toStrictEqual('invoice-box__body-item');
