@@ -1,7 +1,9 @@
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
-import { LineItem } from '../@types/index';
-import EditableLineItems from './editableLineItems';
-import { withLineItems } from '../HOC/withLineItems';
+import { LineItem } from '../../@types/index';
+import EditableLineItems from '../../components/editableLineItems';
+import { withLineItems } from '../../HOC/withLineItems';
+
+const EditableLineItemsComponent = withLineItems(EditableLineItems);
 
 describe('<EditableLineItems />', () => {
   const changeInputMock = jest.fn();
@@ -9,8 +11,6 @@ describe('<EditableLineItems />', () => {
     { description: 'Test data 1', price: 55.0 },
     { description: 'Test data 2', price: 45.0 },
   ];
-
-  const EditableLineItemsComponent = withLineItems(EditableLineItems);
 
   beforeEach(() => {
     render(

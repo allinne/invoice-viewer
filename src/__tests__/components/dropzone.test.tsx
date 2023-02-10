@@ -1,6 +1,6 @@
 import { act, fireEvent, render, cleanup, screen } from '@testing-library/react'
-import Dropzone from "./dropzone";
-import { mockData } from '../utils/tests';
+import Dropzone from '../../components/dropzone';
+import { mockData } from '../../utils/tests';
 
 describe('<Dropzone />', () => {
   const onDrop = jest.fn();

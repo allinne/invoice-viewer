@@ -1,16 +1,15 @@
 import { currencyName, getItemClassName } from '../utils/index';
-import { LineItem, LineItemsData, lineItemPropFunc } from '../@types/index';
+import { LineItem, LineItemsData, LineItemPropFunc } from '../@types/index';
 
 export function withLineItems<T extends LineItemsData>(
   WrappedComponent: React.ComponentType<T>
 ) {
-  const displayName =
-    WrappedComponent.displayName || WrappedComponent.name || "Component";
+  const displayName = WrappedComponent.displayName || WrappedComponent.name;
 
   const ComponentWithLineItems = (props: LineItemsData) => {
     const lastItemIndex = props.lineItems.length - 1;
 
-    const createLineItems = (description: lineItemPropFunc, price: lineItemPropFunc) => {
+    const createLineItems = (description: LineItemPropFunc, price: LineItemPropFunc) => {
       return props.lineItems.map((item: LineItem, index: number) => {
         return (
           <tr className={getItemClassName(lastItemIndex, index)} key={index} data-testid="line-item">

@@ -1,8 +1,8 @@
 import { cleanup, render, screen } from '@testing-library/react';
-import { LineItem } from '../@types/index';
-import { formatPrice } from '../utils/index';
-import LineItems from "./lineItems";
-import { withLineItems } from '../HOC/withLineItems';
+import { LineItem } from '../../@types/index';
+import { formatPrice } from '../../utils/index';
+import LineItems from '../../components/lineItems';
+import { withLineItems } from '../../HOC/withLineItems';
 
 const LineItemsComponent = withLineItems(LineItems);
 

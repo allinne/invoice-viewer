@@ -1,7 +1,7 @@
 import { act, cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Body from "./body";
-import { mockData } from '../utils/tests';
-import { droppedJSON, droppedWrongJSON } from '../fixtures/tests';
+import Body from '../../components/body';
+import { mockData } from '../../utils/tests';
+import { droppedJSON, droppedWrongJSON } from '../../fixtures/tests';
 
 describe('<Body />', () => {
   const JSONdata = {
@@ -26,9 +26,7 @@ describe('<Body />', () => {
   const updateDataMock = jest.fn();
   const changeInputMock = jest.fn();
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('renders a component with Body and without Dropzone components', async () => {
     render(

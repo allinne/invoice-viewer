@@ -1,7 +1,7 @@
 import { act, cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
-import App from "./App";
-import { mockData } from './utils/tests';
-import { json, droppedJSON, droppedWrongJSON } from './fixtures/tests';
+import App from '../App';
+import { mockData } from '../utils/tests';
+import { json, droppedJSON, droppedWrongJSON } from '../fixtures/tests';
 
 describe('<App />', () => {
   let originalFetch: (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
