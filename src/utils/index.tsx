@@ -60,3 +60,13 @@ export function getItemClassName(
 ): string {
   return index === lastItemIndex ? `${initialItemClassName} ${initialItemClassName}--last` : initialItemClassName;
 }
+
+export const emptyInvoiceData = {
+  id: '',
+  email: '',
+  fullName: '',
+  company: '',
+  createdAt: '',
+  dueAt: '',
+  lineItems: [],
+};

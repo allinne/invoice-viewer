@@ -16,7 +16,13 @@ export interface InvoiceJSON {
   lineItems: LineItem[];
 }
 
-export interface BodyData extends EditableLineItemsData {
+export interface BodyData {
+  data: InvoiceJSON;
+  updateData(data: InvoiceJSON): void;
+  changeInput: ChangeLineItemPropFunc;
+}
+
+export interface TableData extends LineItemsData {
   isEditable: boolean;
 }
 
@@ -28,9 +34,9 @@ export enum ReducerActionType {
 
 export interface ReducerAction {
   type: ReducerActionType;
-  item: LineItem;
-  index: number;
-  payload?: LineItem[];
+  item?: LineItem;
+  index?: number;
+  data: InvoiceJSON;
 }
 
 export type onDropEvent = <T extends File>(
@@ -48,9 +54,12 @@ export interface DropzoneProps {
 
 export interface LineItemsData {
   lineItems: LineItem[];
+  changeInput: ChangeLineItemPropFunc;
 }
 
-export interface EditableLineItemsData extends LineItemsData {
-  changeDescription(item: LineItem, index: number): void;
-  changePrice(item: LineItem, index: number): void;
+export type lineItemPropFunc = (item: LineItem, index: number) => JSX.Element | string;
+export type ChangeLineItemPropFunc = (type: ReducerActionType.DESCRIPTION_CHANGED | ReducerActionType.PRICE_CHANGED, item: LineItem, index: number) => void;
+
+export interface WithLineItemsData extends LineItemsData {
+  createLineItems(description: lineItemPropFunc, priceInput: lineItemPropFunc): JSX.Element;
 }

@@ -1,13 +1,14 @@
 import { FormEvent } from 'react';
-import { LineItem, EditableLineItemsData } from '../@types/index';
-import { currencyName, formatPrice, getItemClassName } from '../utils/index';
+import { LineItem, WithLineItemsData, ReducerActionType } from '../@types/index';
+import { formatPrice } from '../utils/index';
 
-function EditableLineItems(props: EditableLineItemsData) {
+function EditableLineItems(props: WithLineItemsData) {
   function handleChangePrice(ev: FormEvent<HTMLInputElement>, item: LineItem, index: number) {
     const inputNumber = ev.currentTarget.value;
     const formatted = Number(inputNumber.replaceAll(',', '.'));
 
-    props.changePrice(
+    props.changeInput(
+      ReducerActionType.PRICE_CHANGED,
       {
         ...item,
         price: Number.isNaN(formatted) ? 0 : formatted,
@@ -16,47 +17,43 @@ function EditableLineItems(props: EditableLineItemsData) {
     );
   }
 
-  const lastItemIndex = props.lineItems.length - 1;
+  const descriptionInput = (item: LineItem, index: number) => {
+    return (
+      <input
+        className="invoice-box__body-input invoice-box__body-input--wide"
+        data-testid="line-item-description-editable"
+        type="text"
+        value={item.description}
+        onChange={(ev: FormEvent<HTMLInputElement>) => {
+          props.changeInput(
+            ReducerActionType.DESCRIPTION_CHANGED,
+            {
+              ...item,
+              description: ev.currentTarget.value,
+            },
+            index
+          );
+        }}
+      />
+    );
+  };
+  const priceInput = (item: LineItem, index: number) => {
+    return (
+      <input
+        className="invoice-box__body-input"
+        data-testid="line-item-price-editable"
+        type="text"
+        value={formatPrice(item.price)}
+        onChange={(ev: FormEvent<HTMLInputElement>) => {
+          handleChangePrice(ev, item, index);
+        }}
+      />
+    );
+  };
 
-  const editableLineItems = props.lineItems.map((item: LineItem, index: number) =>
-    <tr className={getItemClassName(lastItemIndex, index)} key={index} data-testid="line-item-editable">
-      <td>
-        <input
-          className="invoice-box__body-input invoice-box__body-input--wide"
-          data-testid="line-item-description-editable"
-          type="text"
-          value={item.description}
-          onChange={(ev: FormEvent<HTMLInputElement>) => {
-            props.changeDescription(
-              {
-                ...item,
-                description: ev.currentTarget.value,
-              },
-              index
-            );
-          }}
-        />
-      </td>
-      <td>
-        <input
-            className="invoice-box__body-input"
-            data-testid="line-item-price-editable"
-            type="text"
-            value={formatPrice(item.price)}
-            onChange={(ev: FormEvent<HTMLInputElement>) => {
-              handleChangePrice(ev, item, index);
-            }}
-        />
-        &nbsp;{currencyName}
-      </td>
-    </tr>
-  );
+  const editableLineItems = props.createLineItems(descriptionInput, priceInput);
 
-  return (
-    <>
-      {editableLineItems}
-    </>
-  )
+  return editableLineItems;
 }
 
 export default EditableLineItems;
