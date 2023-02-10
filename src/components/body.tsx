@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { BodyData, onDropEvent } from '../@types/index';
 import { validateJSON } from '../utils/index';
+import { LineItem, ReducerActionType } from '../@types/index';
 import Table from './table';
 import Dropzone from './dropzone';
 
@@ -52,12 +53,20 @@ function Body(props: BodyData) {
     setErrorState(false);
   }
 
+  function handleChangeInput(
+    type: ReducerActionType.DESCRIPTION_CHANGED | ReducerActionType.PRICE_CHANGED,
+    item: LineItem,
+    index: number
+  ) {
+    props.dispatch({ type, item, index, data: props.data});
+  }
+
   return (
     <>
       <Table
         isEditable={state}
         lineItems={props.data.lineItems}
-        changeInput={props.changeInput}
+        changeInput={handleChangeInput}
       />
 
       {hasEditQuery ?

@@ -1,5 +1,5 @@
 import { useReducer, useEffect, Reducer, Suspense } from 'react'
-import { InvoiceJSON, LineItem, ReducerAction, ReducerActionType } from './@types/index';
+import { InvoiceJSON, ReducerAction, ReducerActionType } from './@types/index';
 import itemsReducer from './reducers/itemsReducer';
 import Header from './components/header';
 import Body from './components/body';
@@ -24,14 +24,6 @@ function App() {
 
   const [data, dispatch] = useReducer<Reducer<InvoiceJSON, ReducerAction>>(itemsReducer, emptyInvoiceData);
 
-  function handleChangeInput(
-    type: ReducerActionType.DESCRIPTION_CHANGED | ReducerActionType.PRICE_CHANGED,
-    item: LineItem,
-    index: number
-  ) {
-    dispatch({ type, item, index, data});
-  }
-
   return (
     <>
       <Suspense fallback={<p>loading...</p>}>
@@ -40,7 +32,7 @@ function App() {
         <Body
           data={data}
           updateData={updateData}
-          changeInput={handleChangeInput}
+          dispatch={dispatch}
         />
       </Suspense>
     </>

@@ -24,7 +24,7 @@ describe('<Body />', () => {
     ],
   };
   const updateDataMock = jest.fn();
-  const changeInputMock = jest.fn();
+  const dispatchMock = jest.fn();
 
   afterEach(cleanup);
 
@@ -33,7 +33,7 @@ describe('<Body />', () => {
       <Body
         data={JSONdata}
         updateData={updateDataMock}
-        changeInput={changeInputMock}
+        dispatch={dispatchMock}
       />
     );
 
@@ -68,7 +68,7 @@ describe('<Body />', () => {
         <Body
           data={JSONdata}
           updateData={updateDataMock}
-          changeInput={changeInputMock}
+          dispatch={dispatchMock}
         />
       );
 
@@ -84,7 +84,7 @@ describe('<Body />', () => {
 
       fireEvent.input(items[editedItemIndex], { target: { value: editedItemDescription } });
 
-      expect(changeInputMock).toBeTruthy();
+      expect(dispatchMock).toBeTruthy();
     });
 
     it('should call changeInput action changing a price', async () => {
@@ -92,7 +92,7 @@ describe('<Body />', () => {
         <Body
           data={JSONdata}
           updateData={updateDataMock}
-          changeInput={changeInputMock}
+          dispatch={dispatchMock}
         />
       );
 
@@ -106,7 +106,7 @@ describe('<Body />', () => {
 
       fireEvent.input(items[editedItemIndex], { target: { value: editedItemDescription } });
 
-      expect(changeInputMock).toBeTruthy();
+      expect(dispatchMock).toBeTruthy();
     });
 
     it('should successfuly parse the dropped file content', async () => {
@@ -114,7 +114,7 @@ describe('<Body />', () => {
         <Body
           data={JSONdata}
           updateData={updateDataMock}
-          changeInput={changeInputMock}
+          dispatch={dispatchMock}
         />
       );
 
@@ -148,7 +148,7 @@ describe('<Body />', () => {
         <Body
           data={JSONdata}
           updateData={updateDataMock}
-          changeInput={changeInputMock}
+          dispatch={dispatchMock}
         />
       );
 
