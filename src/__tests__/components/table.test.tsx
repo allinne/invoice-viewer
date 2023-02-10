@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react';
-import { LineItem } from '../@types/index';
-import Table from "./table";
+import { LineItem } from '../../@types/index';
+import Table from '../../components/table';
 
 describe('<Table />', () => {
   describe('- readonly mode', () => {

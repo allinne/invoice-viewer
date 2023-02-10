@@ -1,7 +1,7 @@
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
-import { LineItem } from '../@types/index';
-import EditableLineItems from './editableLineItems';
-import { withLineItems } from '../HOC/withLineItems';
+import { LineItem } from '../../@types/index';
+import EditableLineItems from '../../components/editableLineItems';
+import { withLineItems } from '../../HOC/withLineItems';
 
 describe('<EditableLineItems />', () => {
   const changeInputMock = jest.fn();

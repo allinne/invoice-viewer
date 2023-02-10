@@ -1,49 +1,35 @@
 import { act, cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Body from "./body";
+import App from '../App';
 import { mockData } from '../utils/tests';
-import { droppedJSON, droppedWrongJSON } from '../fixtures/tests';
+import { json, droppedJSON, droppedWrongJSON } from '../fixtures/tests';
 
-describe('<Body />', () => {
-  const JSONdata = {
-    id: 'a1a1a1-2b2b2b-c3c3c3-4d4d4d-e5e5e5',
-    email: 'user@email.com',
-    fullName: 'Delaney Howell',
-    company: 'Kassulke Group',
-    createdAt: '2023-01-19',
-    dueAt: '2023-01-30',
+describe('<App />', () => {
+  let originalFetch: (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
 
-    lineItems: [
-      {
-        "description": "Waistcoat schlitz cronut wolf.",
-        "price": 21.23
-      },
-      {
-        "description": "Generating the bus won't do anything, we need to compress the cross-platform JSON card!",
-        "price": 10.71
-      }
-    ],
-  };
-  const updateDataMock = jest.fn();
-  const changeInputMock = jest.fn();
+    beforeEach(() => {
+      originalFetch = global.fetch;
+      global.fetch = jest.fn(() => Promise.resolve({
+        json: () => Promise.resolve(json)
+      })) as jest.Mock;
+    });
 
-  afterEach(() => {
-    cleanup();
-  });
+    afterEach(() => {
+      global.fetch = originalFetch;
+      cleanup();
+    });
 
-  it('renders a component with Body and without Dropzone components', async () => {
-    render(
-      <Body
-        data={JSONdata}
-        updateData={updateDataMock}
-        changeInput={changeInputMock}
-      />
-    );
+  it('renders a component with Head and Body components', async () => {
+    await act(() => {
+      render(
+        <App/>
+      );
+    });
 
     const invoiceBody = await screen.findByTestId('invoice-body');
-    const dropContainer = screen.queryByTestId('drop-container');
+    const invoiceHeader = await screen.findByTestId('invoice-header');
 
     expect(invoiceBody).toBeTruthy();
-    expect(dropContainer).toBeFalsy();
+    expect(invoiceHeader).toBeTruthy();
   });
 
   describe('- editable mode', () => {
@@ -65,14 +51,12 @@ describe('<Body />', () => {
       });
     });
 
-    it('should call changeInput action changing a description', async () => {
-      render(
-        <Body
-          data={JSONdata}
-          updateData={updateDataMock}
-          changeInput={changeInputMock}
-        />
-      );
+    it('should change description', async () => {
+      await act(() => {
+        render(
+          <App/>
+        );
+      });
 
       const editButton = await screen.findByTestId('edit-button');
       fireEvent.click(editButton);
@@ -86,17 +70,15 @@ describe('<Body />', () => {
 
       fireEvent.input(items[editedItemIndex], { target: { value: editedItemDescription } });
 
-      expect(changeInputMock).toBeTruthy();
+      expect(items[editedItemIndex]).toHaveAttribute('value', editedItemDescription);
     });
 
-    it('should call changeInput action changing a price', async () => {
-      render(
-        <Body
-          data={JSONdata}
-          updateData={updateDataMock}
-          changeInput={changeInputMock}
-        />
-      );
+    it('should change price', async () => {
+      await act(() => {
+        render(
+          <App/>
+        );
+      });
 
       const editButton = await screen.findByTestId('edit-button');
       fireEvent.click(editButton);
@@ -104,21 +86,21 @@ describe('<Body />', () => {
       const items = await screen.findAllByTestId('line-item-price-editable');
       const editedItemIndex = 0;
 
+      expect(items[editedItemIndex]).toHaveAttribute('value', '21,23');
+
       const editedItemDescription = '95';
 
       fireEvent.input(items[editedItemIndex], { target: { value: editedItemDescription } });
 
-      expect(changeInputMock).toBeTruthy();
+      expect(items[editedItemIndex]).toHaveAttribute('value', editedItemDescription);
     });
 
     it('should successfuly parse the dropped file content', async () => {
-      render(
-        <Body
-          data={JSONdata}
-          updateData={updateDataMock}
-          changeInput={changeInputMock}
-        />
-      );
+      await act(() => {
+        render(
+          <App/>
+        );
+      });
 
       const dropContainer = await screen.findByTestId('drop-container');
       const file = new File(
@@ -135,24 +117,19 @@ describe('<Body />', () => {
         )
       );
 
+      const items = await screen.findAllByTestId('line-item-price');
+
       await waitFor(() => {
-        expect(updateDataMock).toBeTruthy();
+        expect(items[0]).toHaveTextContent('84,44 EUR');
       });
-
-      const dropAgainButton = await screen.findByTestId('drop-again-button');
-      fireEvent.click(dropAgainButton);
-
-      expect(dropContainer).toBeTruthy();
     });
 
     it('should show an error if JSON file has wrong format', async () => {
-      render(
-        <Body
-          data={JSONdata}
-          updateData={updateDataMock}
-          changeInput={changeInputMock}
-        />
-      );
+      await act(() => {
+        render(
+          <App/>
+        );
+      });
 
       const dropContainer = await screen.findByTestId('drop-container');
       const file = new File(
@@ -169,11 +146,12 @@ describe('<Body />', () => {
         )
       );
 
-      const errorMessage = await screen.findAllByTestId('error-drop');
+      const invoiceId = await screen.findByTestId('invoice-id');
+      const items = await screen.findAllByTestId('line-item-price');
       
       await waitFor(() => {
-        expect(errorMessage).toBeTruthy();
-        expect(updateDataMock).toBeTruthy();
+        expect(invoiceId).toHaveTextContent('Invoice #: 7c5821b6d955');
+        expect(items.length).toStrictEqual(2);
       });
     });
   });
