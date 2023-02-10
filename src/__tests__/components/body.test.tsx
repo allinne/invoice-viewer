@@ -26,9 +26,7 @@ describe('<Body />', () => {
   const updateDataMock = jest.fn();
   const changeInputMock = jest.fn();
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('renders a component with Body and without Dropzone components', async () => {
     render(

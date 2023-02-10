@@ -57,9 +57,9 @@ export interface LineItemsData {
   changeInput: ChangeLineItemPropFunc;
 }
 
-export type lineItemPropFunc = (item: LineItem, index: number) => JSX.Element | string;
+export type LineItemPropFunc = (item: LineItem, index: number) => JSX.Element | string;
 export type ChangeLineItemPropFunc = (type: ReducerActionType.DESCRIPTION_CHANGED | ReducerActionType.PRICE_CHANGED, item: LineItem, index: number) => void;
 
 export interface WithLineItemsData extends LineItemsData {
-  createLineItems(description: lineItemPropFunc, priceInput: lineItemPropFunc): JSX.Element;
+  createLineItems(description: LineItemPropFunc, priceInput: LineItemPropFunc): JSX.Element;
 }
