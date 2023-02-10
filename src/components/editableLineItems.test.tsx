@@ -4,8 +4,7 @@ import EditableLineItems from './editableLineItems';
 import { withLineItems } from '../HOC/withLineItems';
 
 describe('<EditableLineItems />', () => {
-  const changeDescriptionMock = jest.fn();
-  const changePriceMock = jest.fn();
+  const changeInputMock = jest.fn();
   const data: LineItem[] = [
     { description: 'Test data 1', price: 55.0 },
     { description: 'Test data 2', price: 45.0 },
@@ -19,8 +18,7 @@ describe('<EditableLineItems />', () => {
         <tbody>
           <EditableLineItemsComponent
             lineItems={data}
-            changeDescription={changeDescriptionMock}
-            changePrice={changePriceMock}
+            changeInput={changeInputMock}
           />
         </tbody>
       </table>
@@ -38,7 +36,7 @@ describe('<EditableLineItems />', () => {
   });
 
   it('should call changeDescription', async () => {  
-    expect(changeDescriptionMock).not.toHaveBeenCalled();
+    expect(changeInputMock).not.toHaveBeenCalled();
 
     const items = await screen.findAllByTestId('line-item-description-editable');
 
@@ -49,13 +47,14 @@ describe('<EditableLineItems />', () => {
 
     fireEvent.input(items[editedItemIndex], { target: { value: editedItemDescription } });
   
-    expect(changeDescriptionMock).toHaveBeenCalled();
-    expect(changeDescriptionMock.mock.calls[0][0]).toStrictEqual(editedItem);
-    expect(changeDescriptionMock.mock.calls[0][1]).toStrictEqual(editedItemIndex);
+    expect(changeInputMock).toHaveBeenCalled();
+    expect(changeInputMock.mock.calls[0][0]).toStrictEqual(0);
+    expect(changeInputMock.mock.calls[0][1]).toStrictEqual(editedItem);
+    expect(changeInputMock.mock.calls[0][2]).toStrictEqual(editedItemIndex);
   });
 
   it('should call changePrice', async () => {  
-    expect(changeDescriptionMock).not.toHaveBeenCalled();
+    expect(changeInputMock).not.toHaveBeenCalled();
 
     const items = await screen.findAllByTestId('line-item-price-editable');
 
@@ -66,9 +65,10 @@ describe('<EditableLineItems />', () => {
 
     fireEvent.input(items[0], { target: { value: editedItemPrice } });
   
-    expect(changePriceMock).toHaveBeenCalled();
-    expect(changePriceMock.mock.calls[0][0]).toStrictEqual(editedItem);
-    expect(changePriceMock.mock.calls[0][1]).toStrictEqual(editedItemIndex);
+    expect(changeInputMock).toHaveBeenCalled();
+    expect(changeInputMock.mock.calls[0][0]).toStrictEqual(1);
+    expect(changeInputMock.mock.calls[0][1]).toStrictEqual(editedItem);
+    expect(changeInputMock.mock.calls[0][2]).toStrictEqual(editedItemIndex);
   });
 
   it('should convert a wrong value into zero', async () => {  
@@ -81,8 +81,9 @@ describe('<EditableLineItems />', () => {
 
     fireEvent.input(items[0], { target: { value: 'wrong format' } });
   
-    expect(changePriceMock).toHaveBeenCalled();
-    expect(changePriceMock.mock.calls[0][0]).toStrictEqual(editedItem);
-    expect(changePriceMock.mock.calls[0][1]).toStrictEqual(editedItemIndex);
+    expect(changeInputMock).toHaveBeenCalled();
+    expect(changeInputMock.mock.calls[0][0]).toStrictEqual(1);
+    expect(changeInputMock.mock.calls[0][1]).toStrictEqual(editedItem);
+    expect(changeInputMock.mock.calls[0][2]).toStrictEqual(editedItemIndex);
   });
 });

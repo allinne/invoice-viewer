@@ -16,7 +16,13 @@ export interface InvoiceJSON {
   lineItems: LineItem[];
 }
 
-export interface BodyData extends LineItemsData {
+export interface BodyData {
+  data: InvoiceJSON;
+  updateData(data: InvoiceJSON): void;
+  changeInput: ChangeLineItemPropFunc;
+}
+
+export interface TableData extends LineItemsData {
   isEditable: boolean;
 }
 
@@ -48,11 +54,11 @@ export interface DropzoneProps {
 
 export interface LineItemsData {
   lineItems: LineItem[];
-  changeDescription(item: LineItem, index: number): void;
-  changePrice(item: LineItem, index: number): void;
+  changeInput: ChangeLineItemPropFunc;
 }
 
 export type lineItemPropFunc = (item: LineItem, index: number) => JSX.Element | string;
+export type ChangeLineItemPropFunc = (type: ReducerActionType.DESCRIPTION_CHANGED | ReducerActionType.PRICE_CHANGED, item: LineItem, index: number) => void;
 
 export interface WithLineItemsData extends LineItemsData {
   createLineItems(description: lineItemPropFunc, priceInput: lineItemPropFunc): JSX.Element;

@@ -1,56 +1,79 @@
-import LineItems from './lineItems';
-import EditableLineItems from './editableLineItems';
-import { withLineItems } from '../HOC/withLineItems';
-import { BodyData } from '../@types/index';
-import { currencyName, vatValue, sum, calcVAT, formatPrice } from '../utils/index';
-import '../styles/components/body.scss';
-
-const EditableLineItemsComponent = withLineItems(EditableLineItems);
-const LineItemsComponent = withLineItems(LineItems);
+import { useState, useCallback } from 'react';
+import { BodyData, onDropEvent } from '../@types/index';
+import { validateJSON } from '../utils/index';
+import Table from './table';
+import Dropzone from './dropzone';
 
 function Body(props: BodyData) {
-  let total = 0;
-  if (props.lineItems.length) {
-    total = sum(props.lineItems);
+  const hasEditQueryRegExp = new RegExp(/(edit)+/gm);
+  const hasEditQuery = hasEditQueryRegExp.test(window.location.search);
+  const [state, setState] = useState(false);
+  function getButton() {
+    const buttonText = state ? 'save' : 'edit';
+
+    return (
+      <div>
+        <button
+          data-testid="edit-button"
+          className="invoice-box__controls-button"
+          onClick={() => setState(!state)}
+        >
+          {buttonText}
+        </button>
+      </div>
+    )
+  }
+
+  const [dropState, setDropState] = useState(false);
+  const [errorState, setErrorState] = useState(false);
+  const onDrop: onDropEvent = useCallback((acceptedFiles: File[]) => {
+    acceptedFiles.map((item: File) => {
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        const jsonString = e.target?.result as string;
+        const data = JSON.parse(jsonString);
+
+        if (validateJSON(data)) {
+          props.updateData(data);
+          setDropState(true);
+        } else {
+          setErrorState(true);
+        }
+      };
+
+      reader.readAsText(item);
+      return item;
+    });
+  }, [props]);
+
+  function resetDropStates() {
+    setDropState(false);
+    setErrorState(false);
   }
 
   return (
-    <table
-      cellPadding="0"
-      cellSpacing="0"
-      className="invoice-box__body"
-      data-testid="invoice-body"
-    >
-      <tbody>
-        <tr className="invoice-box__body-heading">
-          <td>Item</td>
-          <td>Price</td>
-        </tr>
+    <>
+      <Table
+        isEditable={state}
+        lineItems={props.data.lineItems}
+        changeInput={props.changeInput}
+      />
 
-        {props.isEditable ?
-          <EditableLineItemsComponent
-            lineItems={props.lineItems}
-            changeDescription={props.changeDescription}
-            changePrice={props.changePrice}
-          /> :
-          <LineItemsComponent
-            lineItems={props.lineItems}
-            changeDescription={props.changeDescription}
-            changePrice={props.changePrice}
+      {hasEditQuery ?
+        <div className="invoice-box__controls">
+          <Dropzone
+            isDropSucceded={dropState}
+            isDropFailed={errorState}
+            resetDropState={resetDropStates}
+            onDrop={onDrop}
           />
-        }
-
-        <tr className="invoice-box__body-total">
-          <td></td>
-          <td data-testid="total">Total: {formatPrice(total)} {currencyName}</td>
-        </tr>
-        <tr className="invoice-box__body-vat">
-          <td></td>
-          <td data-testid="vat">VAT ({vatValue}%): {formatPrice(calcVAT(total))} {currencyName}</td>
-        </tr>
-      </tbody>
-    </table>
-  );
+          {getButton()}
+        </div> :
+        ''
+      }
+    </>
+  )
 }
 
 export default Body;

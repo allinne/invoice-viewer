@@ -11,11 +11,7 @@ function LineItems(props: WithLineItemsData) {
 
   const lineItems = props.createLineItems(descriptionInput, priceInput);
 
-  return (
-    <>
-      {lineItems}
-    </>
-  );
+  return lineItems;
 }
 
 export default LineItems;

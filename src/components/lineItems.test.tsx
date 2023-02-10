@@ -7,8 +7,7 @@ import { withLineItems } from '../HOC/withLineItems';
 const LineItemsComponent = withLineItems(LineItems);
 
 describe('<LineItems />', () => {
-  const changeDescriptionMock = jest.fn();
-  const changePriceMock = jest.fn();
+  const changeInputMock = jest.fn();
 
   afterEach(cleanup);
 
@@ -20,8 +19,7 @@ describe('<LineItems />', () => {
         <tbody>
           <LineItemsComponent
             lineItems={data}
-            changeDescription={changeDescriptionMock}
-            changePrice={changePriceMock}
+            changeInput={changeInputMock}
           />
         </tbody>
       </table>
@@ -42,8 +40,7 @@ describe('<LineItems />', () => {
         <tbody>
           <LineItemsComponent
             lineItems={data}
-            changeDescription={changeDescriptionMock}
-            changePrice={changePriceMock}
+            changeInput={changeInputMock}
           />
         </tbody>
       </table>

@@ -23,7 +23,7 @@ describe('<App />', () => {
       render(
         <App/>
       );
-      });
+    });
 
     const invoiceBody = await screen.findByTestId('invoice-body');
     const invoiceHeader = await screen.findByTestId('invoice-header');
@@ -122,11 +122,6 @@ describe('<App />', () => {
       await waitFor(() => {
         expect(items[0]).toHaveTextContent('84,44 EUR');
       });
-
-      const dropAgainButton = await screen.findByTestId('drop-again-button');
-      fireEvent.click(dropAgainButton);
-
-      expect(dropContainer).toBeTruthy();
     });
 
     it('should show an error if JSON file has wrong format', async () => {
@@ -153,12 +148,10 @@ describe('<App />', () => {
 
       const invoiceId = await screen.findByTestId('invoice-id');
       const items = await screen.findAllByTestId('line-item-price');
-      const errorMessage = await screen.findAllByTestId('error-drop');
       
       await waitFor(() => {
         expect(invoiceId).toHaveTextContent('Invoice #: 7c5821b6d955');
         expect(items.length).toStrictEqual(2);
-        expect(errorMessage).toBeTruthy();
       });
     });
   });

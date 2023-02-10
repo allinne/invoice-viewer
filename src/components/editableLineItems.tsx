@@ -1,5 +1,5 @@
 import { FormEvent } from 'react';
-import { LineItem, WithLineItemsData } from '../@types/index';
+import { LineItem, WithLineItemsData, ReducerActionType } from '../@types/index';
 import { formatPrice } from '../utils/index';
 
 function EditableLineItems(props: WithLineItemsData) {
@@ -7,7 +7,8 @@ function EditableLineItems(props: WithLineItemsData) {
     const inputNumber = ev.currentTarget.value;
     const formatted = Number(inputNumber.replaceAll(',', '.'));
 
-    props.changePrice(
+    props.changeInput(
+      ReducerActionType.PRICE_CHANGED,
       {
         ...item,
         price: Number.isNaN(formatted) ? 0 : formatted,
@@ -24,7 +25,8 @@ function EditableLineItems(props: WithLineItemsData) {
         type="text"
         value={item.description}
         onChange={(ev: FormEvent<HTMLInputElement>) => {
-          props.changeDescription(
+          props.changeInput(
+            ReducerActionType.DESCRIPTION_CHANGED,
             {
               ...item,
               description: ev.currentTarget.value,
@@ -51,11 +53,7 @@ function EditableLineItems(props: WithLineItemsData) {
 
   const editableLineItems = props.createLineItems(descriptionInput, priceInput);
 
-  return (
-    <>
-      {editableLineItems}
-    </>
-  )
+  return editableLineItems;
 }
 
 export default EditableLineItems;
