@@ -1,4 +1,4 @@
-# collectAI Invoice DnD Challenge
+# invoice-viewer
 
 The application fetches `invoice.json` and displays its details. It computes the sum and VAT based on data from JSON. 
 
@@ -40,9 +40,8 @@ Install it from GitHub using the following commands
 
 * `npm run lint`
 
-## ToDo
+## TODO
 
-The most challenging part was to stop improving :-) So here is a list of improvements which might be done:
 * UX: show the “Save” button active only if input data differs from initial, otherwise disabled
 * Use [SWR](https://swr.vercel.app/) instead of `fetch` to cache file content
 * Prettier

@@ -8,11 +8,7 @@ function Header(props: InvoiceJSON) {
 
       <div className="invoice-box__header-item">
         <div className="invoice-box__header-cell">
-          <img
-            alt="logo"
-            className="invoice-box__header-logo"
-            src="cai_logo.svg"
-          />
+          LOGO
         </div>
         <div className="invoice-box__header-cell invoice-box__header-cell--right">
           <div data-testid="invoice-id">Invoice #: {getInvoiceNumber(props.id)}</div>
@@ -23,9 +19,9 @@ function Header(props: InvoiceJSON) {
 
       <div className="invoice-box__header-item">
         <div className="invoice-box__header-cell invoice-box__header-cell--company">
-          <div>collectAI GmbH</div>
-          <div>20457 Hamburg</div>
-          <div>Hamburg, Germany</div>
+          <div>Musterfirma GmbH</div>
+          <div>11111 Musterburg</div>
+          <div>Musterstadt, Germany</div>
         </div>
         <div className="invoice-box__header-cell invoice-box__header-cell--right invoice-box__header-cell--company">
           <div data-testid="company">{props.company}</div>
